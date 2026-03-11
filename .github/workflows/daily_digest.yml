@@ -80,22 +80,3 @@ jobs:
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
           EMAIL_TO: ${{ secrets.EMAIL_TO }}
         run: python main.py --run-now
-```
-
----
-
-## 顺序示意图
-```
-拉取代码
-    ↓
-配置 Python
-    ↓
-安装依赖
-    ↓
-✅ 验证 Secrets     ← 新增（看哪个 key 没设置）
-    ↓
-✅ 网络连通性检测   ← 新增（看哪个 API 域名不通）
-    ↓
-恢复数据库缓存
-    ↓
-运行摘要助理       ← 原有
