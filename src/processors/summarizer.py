@@ -98,6 +98,7 @@ def _call_openai_compat(api_key, base_url, model, prompt):
 
 
 def _call_claude(api_key: str, model: str, prompt: str) -> str:
+    api_key = api_key.strip()
     client = anthropic.Anthropic(api_key=api_key)
     response = client.messages.create(
         model=model, max_tokens=1000,
