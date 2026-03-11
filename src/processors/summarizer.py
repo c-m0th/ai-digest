@@ -21,7 +21,7 @@ PROVIDERS = [
         "name": "Gemini",                          # 优先用：每天1500次免费
         "env_key": "GEMINI_API_KEY",
         "type": "gemini",
-        "model": "gemini-1.5-flash",
+        "model": "gemini-2.0-flash",
     },
     {
         "name": "DeepSeek",                        # 备用：极便宜（¥1/百万token）
