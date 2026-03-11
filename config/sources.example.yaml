@@ -1,84 +1,232 @@
 # ============================================================
-# config/sources.yaml — 你的订阅源配置
-# 复制为 sources.yaml 后按需编辑
+# config/sources.yaml — 订阅源配置
+# 方向：心脑医学信号处理 + 深度学习
+# 复制为 sources.yaml 后按需注释/删除不需要的条目
 # ============================================================
 
 settings:
-  max_items_per_source: 5          # 每个来源最多处理几条
+  max_items_per_source: 3          # 每个来源最多处理几条（源较多时建议2-3）
   max_content_chars: 12000         # 送入 Claude 的最大字符数
-  days_lookback: 1                 # 只看最近几天的内容（0=今天）
-  language_hint: "中文或英文均可"   # 提示 Claude 输出语言
+  days_lookback: 1                 # 只看最近几天的内容
+  language_hint: "中文输出，专业术语保留英文原文"
 
-# ─────────────────────────────────────────
-# YouTube 频道（填 channel_id 或 handle）
-# ─────────────────────────────────────────
+
+# ═══════════════════════════════════════════════════════════
+# 一、YouTube 频道
+# ═══════════════════════════════════════════════════════════
+
 youtube:
-  - name: "Andrej Karpathy"
+
+  # ── 心脑信号处理 / 生物医学工程 ──────────────────────────
+
+  - name: "NeuroMatch Academy"              # 计算神经科学课程，含EEG/fMRI建模
+    channel_id: "UC4s3TV2-GWFoFaI5USKWJmA"
+
+  - name: "IBRO Neuroscience"               # 国际脑研究组织讲座
+    channel_id: "UCCjnQjPTvjdoVLgkDZC9i7A"
+
+  - name: "Cardiology Explained"            # 心电图/心律失常临床讲解
+    channel_id: "UCsmbIcMjBAzxFBNPl1jFbzQ"
+
+  - name: "Oxford Academic Cardiovascular"  # 牛津心血管期刊视频摘要
+    channel_id: "UCqHiHHUeBoNpVvWNkTkRnXA"
+
+  # ── 深度学习 / AI ────────────────────────────────────────
+
+  - name: "Andrej Karpathy"                 # 深度学习底层原理
     channel_id: "UCXUPKJO5MZQMU11oa6u6KbA"
-  - name: "Yannic Kilcher"
+
+  - name: "Yannic Kilcher"                  # 顶会论文精读，含医疗AI
     channel_id: "UCZHmQk67mSJgfCCTn7xBfew"
-  - name: "Two Minute Papers"
-    channel_id: "UCbfYPyITQ-7l4upoX8nvctg"
-  - name: "3Blue1Brown"
-    channel_id: "UCYO_jab_esuFRV4b17AJtAg"
-  - name: "StatQuest with Josh Starmer"
+
+  - name: "StatQuest with Josh Starmer"     # 统计+ML基础，生物医学背景友好
     channel_id: "UCtYLUTtgS3k1Fg4y5tAhLbw"
 
-# ─────────────────────────────────────────
-# RSS 源（Substack / Medium / 博客）
-# ─────────────────────────────────────────
+  - name: "3Blue1Brown"                     # 神经网络数学可视化
+    channel_id: "UCYO_jab_esuFRV4b17AJtAg"
+
+  - name: "Two Minute Papers"               # AI论文2分钟速览
+    channel_id: "UCbfYPyITQ-7l4upoX8nvctg"
+
+  - name: "Umar Jamil"                      # Transformer/注意力机制从零实现
+    channel_id: "UCmOwsoHty5PrmE-3QhUBfPQ"
+
+
+# ═══════════════════════════════════════════════════════════
+# 二、RSS 博客 / Newsletter
+# ═══════════════════════════════════════════════════════════
+
 rss_blogs:
-  - name: "The Batch (DeepLearning.AI)"
-    url: "https://www.deeplearning.ai/the-batch/feed/"
-  - name: "Lilian Weng's Blog"
+
+  # ── 医学 AI / 生物医学信号 ───────────────────────────────
+
+  - name: "The Medical Futurist"            # 数字健康与医疗AI趋势
+    url: "https://medicalfuturist.com/feed/"
+
+  - name: "Nature Machine Intelligence"     # Nature子刊，医学AI高质量论文
+    url: "https://www.nature.com/natmachintell.rss"
+
+  - name: "AHA Journals - Circulation"      # 美国心脏协会期刊最新文章
+    url: "https://www.ahajournals.org/action/showFeed?type=etoc&feed=rss&jc=circ"
+
+  - name: "Papers With Code Latest"         # 最新SOTA论文+代码
+    url: "https://paperswithcode.com/latest/rss"
+
+  # ── 深度学习 / AI ────────────────────────────────────────
+
+  - name: "Lilian Weng's Blog"              # OpenAI研究员，深度长文
     url: "https://lilianweng.github.io/index.xml"
-  - name: "Ahead of AI (Sebastian Raschka)"
+
+  - name: "Ahead of AI (Sebastian Raschka)" # LLM/深度学习前沿月刊
     url: "https://magazine.sebastianraschka.com/feed"
-  - name: "Newsletter by Chip Huyen"
+
+  - name: "The Batch (DeepLearning.AI)"     # 吴恩达团队周报
+    url: "https://www.deeplearning.ai/the-batch/feed/"
+
+  - name: "Chip Huyen - AI Engineering"     # ML系统工程实践
     url: "https://huyenchip.substack.com/feed"
-  - name: "Eugene Yan"
-    url: "https://eugeneyan.com/rss/"
 
-# ─────────────────────────────────────────
-# ArXiv 关键词/分类订阅
-# ─────────────────────────────────────────
+
+# ═══════════════════════════════════════════════════════════
+# 三、ArXiv 论文订阅
+#
+# 常用分类：
+#   eess.SP  = 信号处理（Signal Processing）
+#   eess.IV  = 图像/视频处理（医学影像）
+#   cs.LG    = 机器学习
+#   cs.CV    = 计算机视觉
+#   q-bio.NC = 计算神经科学
+# ═══════════════════════════════════════════════════════════
+
 arxiv:
-  - name: "LLM Papers"
-    query: "cat:cs.LG+AND+ti:large+language+model"
-    max_results: 5
-  - name: "Diffusion Models"
-    query: "cat:cs.CV+AND+ti:diffusion"
-    max_results: 3
-  - name: "Reinforcement Learning"
-    query: "cat:cs.LG+AND+ti:reinforcement+learning"
+
+  # ── 心脏信号 ─────────────────────────────────────────────
+
+  - name: "ECG 深度学习"
+    query: "cat:eess.SP+AND+(ti:ECG+OR+ti:electrocardiogram+OR+ti:arrhythmia)"
+    max_results: 4
+
+  - name: "MCG 深度学习"
+    query: "cat:eess.SP+AND+(ti:MCG+OR+ti:electrocardiogram+OR+ti:arrhythmia)"
+    max_results: 4
+
+  - name: "心房颤动 / 心律失常检测"
+    query: "cat:cs.LG+AND+(ti:atrial+fibrillation+OR+ti:arrhythmia+detection)"
     max_results: 3
 
-# ─────────────────────────────────────────
-# 播客 RSS（只抓最新一集）
-# ─────────────────────────────────────────
+  - name: "心音信号 PCG"
+    query: "cat:eess.SP+AND+(ti:phonocardiogram+OR+ti:heart+sound+OR+ti:PCG)"
+    max_results: 3
+
+  - name: "心血管疾病预测"
+    query: "cat:cs.LG+AND+(ti:cardiovascular+OR+ti:cardiac)+AND+ti:deep+learning"
+    max_results: 3
+
+  # ── 脑信号 ───────────────────────────────────────────────
+
+  - name: "EEG 深度学习"
+    query: "cat:eess.SP+AND+(ti:EEG+OR+ti:electroencephalogram)+AND+ti:deep+learning"
+    max_results: 4
+
+  - name: "脑机接口 BCI"
+    query: "cat:cs.LG+AND+(ti:brain-computer+interface+OR+ti:BCI+OR+ti:motor+imagery)"
+    max_results: 3
+
+  - name: "fMRI / 神经影像"
+    query: "cat:eess.IV+AND+(ti:fMRI+OR+ti:neuroimaging+OR+ti:brain+MRI)"
+    max_results: 3
+
+  - name: "癫痫检测"
+    query: "cat:cs.LG+AND+(ti:epilepsy+OR+ti:seizure+detection)"
+    max_results: 3
+
+  - name: "睡眠分期"
+    query: "cat:eess.SP+AND+(ti:sleep+staging+OR+ti:sleep+apnea+OR+ti:polysomnography)"
+    max_results: 3
+
+  # ── 医学信号通用方法 ──────────────────────────────────────
+
+  - name: "生物医学信号 Transformer"
+    query: "cat:cs.LG+AND+(ti:biosignal+OR+ti:physiological+signal)+AND+ti:transformer"
+    max_results: 3
+
+  - name: "可穿戴设备信号处理"
+    query: "cat:eess.SP+AND+(ti:wearable+OR+ti:PPG+OR+ti:IMU)+AND+ti:deep+learning"
+    max_results: 3
+
+  - name: "医学时序信号基础模型"
+    query: "cat:cs.LG+AND+(ti:foundation+model+OR+ti:pretrained)+AND+(ti:ECG+OR+ti:EEG+OR+ti:biosignal)"
+    max_results: 3
+
+  # ── 深度学习通用方法 ──────────────────────────────────────
+
+  - name: "自监督 / 对比学习"
+    query: "cat:cs.LG+AND+(ti:self-supervised+OR+ti:contrastive+learning)"
+    max_results: 3
+
+  - name: "医学小样本 / 迁移学习"
+    query: "cat:cs.LG+AND+(ti:few-shot+OR+ti:transfer+learning)+AND+ti:medical"
+    max_results: 3
+
+
+# ═══════════════════════════════════════════════════════════
+# 四、播客
+# ═══════════════════════════════════════════════════════════
+
 podcasts:
-  - name: "Lex Fridman Podcast"
-    url: "https://lexfridman.com/feed/podcast/"
-    transcribe: false              # true 用 Whisper，需要更多计算
-  - name: "The TWIML AI Podcast"
+
+  # ── 医学 / 神经科学 ──────────────────────────────────────
+
+  - name: "Brain Science with Ginger Campbell"   # 顶级神经科学播客，深度学术访谈
+    url: "https://brainsciencepodcast.com/bsp.xml"
+    transcribe: false
+
+  - name: "CardioNerds"                          # 心脏病学专业播客（ACC官方支持）
+    url: "https://feeds.buzzsprout.com/1252790.rss"
+    transcribe: false
+
+  - name: "Huberman Lab"                         # 斯坦福神经科学，脑科学应用
+    url: "https://feeds.megaphone.fm/hubermanlab"
+    transcribe: false
+
+  # ── AI / 深度学习 ─────────────────────────────────────────
+
+  - name: "TWIML AI Podcast"                     # ML/DL学术与工业前沿访谈
     url: "https://twimlai.com/feed"
     transcribe: false
-  - name: "Machine Learning Street Talk"
+
+  - name: "Machine Learning Street Talk"         # 顶级研究者深度对话
     url: "https://feeds.buzzsprout.com/1511458.rss"
     transcribe: false
 
-# ─────────────────────────────────────────
-# Hacker News（抓 AI/ML 相关热帖）
-# ─────────────────────────────────────────
+  - name: "Practical AI"                         # AI工程实践，偏应用落地
+    url: "https://changelog.com/practicalai/feed"
+    transcribe: false
+
+
+# ═══════════════════════════════════════════════════════════
+# 五、Hacker News 热帖过滤
+# ═══════════════════════════════════════════════════════════
+
 hackernews:
   enabled: true
-  keywords:                        # 标题包含这些词才纳入
-    - "LLM"
-    - "machine learning"
+  keywords:
+    # 医学信号处理
+    - "ECG"
+    - "EEG"
+    - "brain"
+    - "cardiac"
+    - "biosignal"
+    - "wearable"
+    - "medical AI"
+    - "health AI"
+    - "BCI"
+    - "neuroscience"
+    # 深度学习通用
     - "deep learning"
-    - "AI"
-    - "neural"
-    - "GPT"
     - "transformer"
-  min_score: 100                   # 最低分数门槛
-  max_items: 5
+    - "neural network"
+    - "machine learning"
+    - "foundation model"
+  min_score: 80                    # 医学类帖子分数偏低，适当降低门槛
+  max_items: 4
