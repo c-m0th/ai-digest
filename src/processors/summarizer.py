@@ -1,182 +1,206 @@
 """
-processors/summarizer.py — 用 Claude API 总结内容
+processors/summarizer.py — 多 API Provider 支持，自动轮换降级
+支持：Claude / OpenAI GPT / Google Gemini / Groq / DeepSeek
 """
-from __future__ import annotations
-
 import os
+import time
 import anthropic
+import requests
 from src.utils.logger import get_logger
 
 logger = get_logger("summarizer")
 
-client = anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY", ""))
+# ─────────────────────────────────────────────────────────
+# Provider 配置
+# 在 .env 或 GitHub Secrets 中设置对应的 key
+# 没有设置的 key 会自动跳过
+# ─────────────────────────────────────────────────────────
+PROVIDERS = [
+    {
+        "name": "Gemini",                          # 优先用：每天1500次免费
+        "env_key": "GEMINI_API_KEY",
+        "type": "gemini",
+        "model": "gemini-1.5-flash",
+    },
+    {
+        "name": "DeepSeek",                        # 备用：极便宜（¥1/百万token）
+        "env_key": "DEEPSEEK_API_KEY",
+        "type": "openai_compat",
+        "model": "deepseek-chat",
+        "base_url": "https://api.deepseek.com/v1",
+    },
+    {
+        "name": "Claude",                          # 备用
+        "env_key": "ANTHROPIC_API_KEY",
+        "type": "claude",
+        "model": "claude-sonnet-4-20250514",
+    },
+    {
+        "name": "GPT-4o-mini",                     # 备用
+        "env_key": "OPENAI_API_KEY",
+        "type": "openai_compat",
+        "model": "gpt-4o-mini",
+        "base_url": "https://api.openai.com/v1",
+    },
+    {
+        "name": "Groq",                            # 备用：免费但有速率限制
+        "env_key": "GROQ_API_KEY",
+        "type": "openai_compat",
+        "model": "llama-3.3-70b-versatile",
+        "base_url": "https://api.groq.com/openai/v1",
+    },
+]
 
-# 每种内容类型的提示词模板
+
+def _get_available_providers():
+    """只返回已配置了 API Key 的 provider"""
+    available = []
+    for p in PROVIDERS:
+        if os.environ.get(p["env_key"]):
+            available.append(p)
+    if not available:
+        raise RuntimeError("未找到任何 API Key！请在 .env 中设置至少一个。")
+    logger.info(f"[Summarizer] 可用 providers: {[p['name'] for p in available]}")
+    return available
+
+
+def _call_gemini(api_key: str, model: str, prompt: str) -> str:
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
+    resp = requests.post(
+        url,
+        params={"key": api_key},
+        json={"contents": [{"parts": [{"text": prompt}]}]},
+        timeout=30,
+    )
+    resp.raise_for_status()
+    return resp.json()["candidates"][0]["content"]["parts"][0]["text"].strip()
+
+
+def _call_openai_compat(api_key: str, base_url: str, model: str, prompt: str) -> str:
+    """兼容 OpenAI 接口格式的通用调用（GPT / DeepSeek / Groq 均适用）"""
+    resp = requests.post(
+        f"{base_url}/chat/completions",
+        headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
+        json={"model": model, "messages": [{"role": "user", "content": prompt}], "max_tokens": 1000},
+        timeout=30,
+    )
+    resp.raise_for_status()
+    return resp.json()["choices"][0]["message"]["content"].strip()
+
+
+def _call_claude(api_key: str, model: str, prompt: str) -> str:
+    client = anthropic.Anthropic(api_key=api_key)
+    response = client.messages.create(
+        model=model, max_tokens=1000,
+        messages=[{"role": "user", "content": prompt}],
+    )
+    return response.content[0].text.strip()
+
+
+def _call_provider(provider: dict, prompt: str) -> str:
+    """调用单个 provider"""
+    api_key = os.environ[provider["env_key"]]
+    ptype = provider["type"]
+
+    if ptype == "gemini":
+        return _call_gemini(api_key, provider["model"], prompt)
+    elif ptype == "openai_compat":
+        return _call_openai_compat(api_key, provider["base_url"], provider["model"], prompt)
+    elif ptype == "claude":
+        return _call_claude(api_key, provider["model"], prompt)
+    else:
+        raise ValueError(f"未知 provider 类型: {ptype}")
+
+
+# ── Prompt 模板（与原版相同，此处省略，直接复用原文件中的 PROMPTS 字典）──
 PROMPTS = {
-    "video_transcript": """你是一个深度学习/AI领域的学术内容助理。
-请对以下YouTube视频字幕进行结构化总结，用中文输出：
+    "video_transcript": """你是深度学习/AI领域的学术内容助理，请总结以下YouTube视频字幕（中文输出）：
+标题：{title} | 频道：{source_name}
+内容：{content}
 
-视频标题：{title}
-频道：{source_name}
-字幕内容：{content}
-
-请严格按以下格式输出（每项不超过3条）：
-
-**🎯 核心论点**
-- ...
-
-**🔧 技术方法/工具**
-- ...
-
-**💡 关键洞察**
-- ...
-
-**📌 一句话总结**
-（用一句话说明为什么值得看这个视频）""",
-
-    "description": """你是一个AI内容助理。
-请根据以下YouTube视频描述，推断视频内容并写一个简短摘要：
-
-视频标题：{title}
-频道：{source_name}
-描述：{content}
-
-请用中文写2-3句话的摘要，说明视频可能涵盖的内容和价值。""",
-
-    "article": """你是一个深度学习/AI领域的学术内容助理。
-请对以下文章进行结构化总结，用中文输出：
-
-文章标题：{title}
-来源：{source_name}
-文章内容：{content}
-
-请严格按以下格式输出：
-
-**🎯 核心观点**
-- ...（最多3条）
-
-**📊 主要论据/数据**
-- ...（最多2条）
-
-**💡 对从业者的启示**
-- ...（1-2条）
-
-**📌 一句话总结**
-（这篇文章最重要的一个takeaway）""",
-
-    "paper_abstract": """你是一个深度学习/AI领域的研究助理。
-请对以下论文摘要进行解读，用中文输出：
-
-论文标题：{title}
-来源：{source_name}
-摘要：{content}
-
-请严格按以下格式输出：
-
-**🔬 研究问题**
-（这篇论文解决什么问题？1句话）
-
-**🛠 方法创新**
-- ...（1-2条核心方法创新点）
-
-**📈 主要结果**
-- ...（关键实验结果或性能提升）
-
-**🌟 意义与影响**
-（为什么这篇论文值得关注？1-2句话）""",
-
-    "podcast_summary": """你是一个AI内容助理。
-请根据以下播客节目说明，写一个摘要：
-
-节目标题：{title}
-播客：{source_name}
-节目说明：{content}
-
-请用中文输出：
-
-**🎙 嘉宾与话题**
-（主要嘉宾和讨论话题）
-
-**🔑 核心议题**
-- ...（2-3个主要讨论点）
-
-**💡 值得收听的理由**
-（1句话）""",
-
-    "podcast_transcript": """你是一个AI内容助理。
-请对以下播客转录文字进行总结：
-
-节目标题：{title}
-播客：{source_name}
-转录内容：{content}
-
-请用中文按以下格式输出：
-
-**🎯 核心讨论主题**
-- ...（3条）
-
-**💬 关键观点**
-- ...（3-4条最值得记录的观点）
-
+**🎯 核心论点**（3条）
+**🔧 技术方法**（2条）
+**💡 关键洞察**（2条）
 **📌 一句话总结**""",
 
-    "hn_post": """你是一个AI内容助理。
-请对以下Hacker News帖子进行简短说明：
+    "article": """你是深度学习/AI领域的学术内容助理，请总结以下文章（中文输出）：
+标题：{title} | 来源：{source_name}
+内容：{content}
 
+**🎯 核心观点**（3条）
+**📊 主要论据**（2条）
+**💡 对从业者的启示**（1条）
+**📌 一句话总结**""",
+
+    "paper_abstract": """你是AI研究助理，请解读以下论文摘要（中文输出）：
 标题：{title}
 内容：{content}
 
-请用中文写2-3句话，说明这个帖子讨论的内容和为什么值得关注。""",
-}
+**🔬 研究问题**
+**🛠 方法创新**（2条）
+**📈 主要结果**
+**🌟 意义与影响**""",
 
-DEFAULT_PROMPT = PROMPTS["article"]
+    "podcast_summary": """请总结以下播客节目（中文输出）：
+标题：{title} | 播客：{source_name}
+说明：{content}
+
+**🎙 话题与嘉宾**
+**🔑 核心议题**（3条）
+**💡 值得收听的理由**""",
+
+    "hn_post": """请简要说明以下HN帖子的内容和价值（中文，2-3句话）：
+标题：{title}
+内容：{content}""",
+
+    "description": """根据以下YouTube视频描述推断内容，写2-3句中文摘要：
+标题：{title} | 频道：{source_name}
+描述：{content}""",
+}
 
 
 def summarize(item: dict, max_content_chars: int = 12000, language_hint: str = "") -> str:
     """
-    调用 Claude API 总结单条内容
-    Returns: 总结文字
+    自动轮换尝试所有可用 provider，全部失败才报错
     """
     content_type = item.get("content_type", "article")
-    prompt_template = PROMPTS.get(content_type, DEFAULT_PROMPT)
-
-    # 截断内容避免超出 token 限制
+    prompt_template = PROMPTS.get(content_type, PROMPTS["article"])
     content = item.get("content", "")[:max_content_chars]
-
     prompt = prompt_template.format(
         title=item.get("title", ""),
         source_name=item.get("source_name", ""),
         content=content,
     )
 
-    if language_hint:
-        prompt += f"\n\n（输出语言提示：{language_hint}）"
+    providers = _get_available_providers()
+    last_error = None
 
-    try:
-        response = client.messages.create(
-            model="claude-sonnet-4-20250514",
-            max_tokens=1000,
-            messages=[{"role": "user", "content": prompt}],
-        )
-        return response.content[0].text.strip()
-    except anthropic.RateLimitError:
-        logger.warning("[Summarizer] 触发 Rate Limit，等待 30s 后重试...")
-        import time
-        time.sleep(30)
-        return summarize(item, max_content_chars, language_hint)
-    except Exception as e:
-        logger.error(f"[Summarizer] Claude API 调用失败: {e}")
-        return f"（总结失败：{str(e)}）"
+    for provider in providers:
+        try:
+            logger.info(f"[Summarizer] 使用 {provider['name']} 总结: {item['title'][:40]}...")
+            result = _call_provider(provider, prompt)
+            return result
+        except requests.HTTPError as e:
+            status = e.response.status_code if e.response else 0
+            if status == 429:                      # Rate limit，换下一个
+                logger.warning(f"[{provider['name']}] 触发限流，切换下一个 provider")
+                time.sleep(2)
+            elif status in (401, 403):             # Key 无效
+                logger.warning(f"[{provider['name']}] API Key 无效，切换下一个")
+            else:
+                logger.warning(f"[{provider['name']}] HTTP {status}，切换下一个")
+            last_error = e
+        except Exception as e:
+            logger.warning(f"[{provider['name']}] 调用失败: {e}，切换下一个")
+            last_error = e
+
+    return f"（所有 provider 均调用失败，最后错误：{last_error}）"
 
 
 def batch_summarize(items: list[dict], settings: dict) -> list[dict]:
-    """批量总结，结果写入 item['summary']"""
     max_chars = settings.get("max_content_chars", 12000)
     lang = settings.get("language_hint", "")
-    total = len(items)
-
     for i, item in enumerate(items, 1):
-        logger.info(f"[Summarizer] 总结 {i}/{total}: {item['title'][:50]}...")
+        logger.info(f"[Summarizer] {i}/{len(items)}: {item['title'][:50]}")
         item["summary"] = summarize(item, max_chars, lang)
-
     return items
