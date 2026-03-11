@@ -1,0 +1,13 @@
+.env
+data/
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store
+preview.html
+config/sources.yaml
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
