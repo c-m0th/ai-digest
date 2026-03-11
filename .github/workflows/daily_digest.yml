@@ -2,8 +2,8 @@ name: Daily AI Digest
 
 on:
   schedule:
-    - cron: '0 0 * * *'   # 每天 UTC 00:00 = 北京时间 08:00
-  workflow_dispatch:        # 允许手动触发
+    - cron: '0 0 * * *'
+  workflow_dispatch:
 
 jobs:
   digest:
@@ -27,6 +27,40 @@ jobs:
                       trafilatura requests PyYAML schedule \
                       jinja2 beautifulsoup4 python-dotenv yt-dlp
 
+      # ✅ 第一个诊断步骤：检查 Secrets 是否注入
+      - name: 验证 Secrets 是否注入
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          EMAIL_ADDRESS: ${{ secrets.EMAIL_ADDRESS }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+        run: |
+          [ -n "$GEMINI_API_KEY" ]    && echo "✅ GEMINI_API_KEY 已设置"    || echo "❌ GEMINI_API_KEY 未设置"
+          [ -n "$DEEPSEEK_API_KEY" ]  && echo "✅ DEEPSEEK_API_KEY 已设置"  || echo "❌ DEEPSEEK_API_KEY 未设置"
+          [ -n "$ANTHROPIC_API_KEY" ] && echo "✅ ANTHROPIC_API_KEY 已设置" || echo "❌ ANTHROPIC_API_KEY 未设置"
+          [ -n "$OPENAI_API_KEY" ]    && echo "✅ OPENAI_API_KEY 已设置"    || echo "❌ OPENAI_API_KEY 未设置"
+          [ -n "$GROQ_API_KEY" ]      && echo "✅ GROQ_API_KEY 已设置"      || echo "❌ GROQ_API_KEY 未设置"
+          [ -n "$EMAIL_ADDRESS" ]     && echo "✅ EMAIL_ADDRESS 已设置"     || echo "❌ EMAIL_ADDRESS 未设置"
+          [ -n "$EMAIL_PASSWORD" ]    && echo "✅ EMAIL_PASSWORD 已设置"    || echo "❌ EMAIL_PASSWORD 未设置"
+
+      # ✅ 第二个诊断步骤：检查网络连通性
+      - name: 网络连通性检测
+        run: |
+          echo "=== DNS 解析测试 ==="
+          nslookup generativelanguage.googleapis.com || echo "❌ Gemini DNS 失败"
+          nslookup api.deepseek.com                  || echo "❌ DeepSeek DNS 失败"
+          nslookup api.anthropic.com                 || echo "❌ Claude DNS 失败"
+          nslookup api.openai.com                    || echo "❌ OpenAI DNS 失败"
+
+          echo "=== HTTPS 连通测试 ==="
+          curl -sI --max-time 10 https://generativelanguage.googleapis.com || echo "❌ Gemini 不可达"
+          curl -sI --max-time 10 https://api.anthropic.com                 || echo "❌ Claude 不可达"
+          curl -sI --max-time 10 https://api.deepseek.com                  || echo "❌ DeepSeek 不可达"
+          curl -sI --max-time 10 https://api.openai.com                    || echo "❌ OpenAI 不可达"
+
       - name: 恢复去重数据库缓存
         uses: actions/cache@v4
         with:
@@ -34,6 +68,7 @@ jobs:
           key: digest-db-${{ github.run_number }}
           restore-keys: digest-db-
 
+      # ✅ 正式运行
       - name: 运行摘要助理
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -45,3 +80,22 @@ jobs:
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
           EMAIL_TO: ${{ secrets.EMAIL_TO }}
         run: python main.py --run-now
+```
+
+---
+
+## 顺序示意图
+```
+拉取代码
+    ↓
+配置 Python
+    ↓
+安装依赖
+    ↓
+✅ 验证 Secrets     ← 新增（看哪个 key 没设置）
+    ↓
+✅ 网络连通性检测   ← 新增（看哪个 API 域名不通）
+    ↓
+恢复数据库缓存
+    ↓
+运行摘要助理       ← 原有
