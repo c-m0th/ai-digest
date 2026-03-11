@@ -4,6 +4,7 @@ processors/summarizer.py — 多 API Provider 支持，自动轮换降级
 """
 import os
 import time
+import socket
 import anthropic
 import requests
 from src.utils.logger import get_logger
