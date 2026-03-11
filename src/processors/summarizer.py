@@ -64,25 +64,33 @@ def _get_available_providers():
     return available
 
 
-def _call_gemini(api_key: str, model: str, prompt: str) -> str:
+def _call_gemini(api_key, model, prompt):
     url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
     resp = requests.post(
         url,
         params={"key": api_key},
         json={"contents": [{"parts": [{"text": prompt}]}]},
-        timeout=30,
+        timeout=(10, 60),   # (连接超时, 读取超时) 秒
+        verify=True,        # SSL 验证
     )
     resp.raise_for_status()
     return resp.json()["candidates"][0]["content"]["parts"][0]["text"].strip()
 
 
-def _call_openai_compat(api_key: str, base_url: str, model: str, prompt: str) -> str:
-    """兼容 OpenAI 接口格式的通用调用（GPT / DeepSeek / Groq 均适用）"""
+def _call_openai_compat(api_key, base_url, model, prompt):
     resp = requests.post(
         f"{base_url}/chat/completions",
-        headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
-        json={"model": model, "messages": [{"role": "user", "content": prompt}], "max_tokens": 1000},
-        timeout=30,
+        headers={
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+        },
+        json={
+            "model": model,
+            "messages": [{"role": "user", "content": prompt}],
+            "max_tokens": 1000,
+        },
+        timeout=(10, 60),
+        verify=True,
     )
     resp.raise_for_status()
     return resp.json()["choices"][0]["message"]["content"].strip()
@@ -98,18 +106,17 @@ def _call_claude(api_key: str, model: str, prompt: str) -> str:
 
 
 def _call_provider(provider: dict, prompt: str) -> str:
-    """调用单个 provider"""
     api_key = os.environ[provider["env_key"]]
     ptype = provider["type"]
 
     if ptype == "gemini":
         return _call_gemini(api_key, provider["model"], prompt)
     elif ptype == "openai_compat":
-        return _call_openai_compat(api_key, provider["base_url"], provider["model"], prompt)
+        return _call_openai_compat(
+            api_key, provider["base_url"], provider["model"], prompt
+        )
     elif ptype == "claude":
         return _call_claude(api_key, provider["model"], prompt)
-    else:
-        raise ValueError(f"未知 provider 类型: {ptype}")
 
 
 # ── Prompt 模板（与原版相同，此处省略，直接复用原文件中的 PROMPTS 字典）──
@@ -160,9 +167,6 @@ PROMPTS = {
 
 
 def summarize(item: dict, max_content_chars: int = 12000, language_hint: str = "") -> str:
-    """
-    自动轮换尝试所有可用 provider，全部失败才报错
-    """
     content_type = item.get("content_type", "article")
     prompt_template = PROMPTS.get(content_type, PROMPTS["article"])
     content = item.get("content", "")[:max_content_chars]
@@ -177,24 +181,33 @@ def summarize(item: dict, max_content_chars: int = 12000, language_hint: str = "
 
     for provider in providers:
         try:
-            logger.info(f"[Summarizer] 使用 {provider['name']} 总结: {item['title'][:40]}...")
+            logger.info(f"[Summarizer] 使用 {provider['name']} ...")
             result = _call_provider(provider, prompt)
             return result
-        except requests.HTTPError as e:
-            status = e.response.status_code if e.response else 0
-            if status == 429:                      # Rate limit，换下一个
-                logger.warning(f"[{provider['name']}] 触发限流，切换下一个 provider")
-                time.sleep(2)
-            elif status in (401, 403):             # Key 无效
-                logger.warning(f"[{provider['name']}] API Key 无效，切换下一个")
-            else:
-                logger.warning(f"[{provider['name']}] HTTP {status}，切换下一个")
-            last_error = e
-        except Exception as e:
-            logger.warning(f"[{provider['name']}] 调用失败: {e}，切换下一个")
+
+        # ① 限流 → 等待后换下一个
+        except requests.exceptions.HTTPError as e:
+            status = e.response.status_code if e.response is not None else 0
+            logger.warning(f"[{provider['name']}] HTTP {status}: {e}")
+            if status == 429:
+                logger.warning("触发限流，等 10s 后切换")
+                time.sleep(10)
             last_error = e
 
-    return f"（所有 provider 均调用失败，最后错误：{last_error}）"
+        # ② 网络不通（DNS/TCP/SSL）→ 直接换下一个
+        except (requests.exceptions.ConnectionError,
+                requests.exceptions.Timeout,
+                socket.gaierror) as e:
+            logger.warning(f"[{provider['name']}] 网络连接失败: {type(e).__name__}: {e}")
+            last_error = e
+
+        # ③ anthropic SDK 自己的连接错误
+        except Exception as e:
+            err_type = type(e).__name__
+            logger.warning(f"[{provider['name']}] 调用异常 [{err_type}]: {e}")
+            last_error = e
+
+    return f"（所有 provider 均失败，最后错误：{last_error}）"
 
 
 def batch_summarize(items: list[dict], settings: dict) -> list[dict]:
