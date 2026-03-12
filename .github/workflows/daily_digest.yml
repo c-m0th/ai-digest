@@ -60,7 +60,22 @@ jobs:
           curl -sI --max-time 10 https://api.anthropic.com                 || echo "❌ Claude 不可达"
           curl -sI --max-time 10 https://api.deepseek.com                  || echo "❌ DeepSeek 不可达"
           curl -sI --max-time 10 https://api.openai.com                    || echo "❌ OpenAI 不可达"
-
+      
+      # ── 写入 YouTube cookies（可选，能显著提升字幕成功率）───
+      # 如果在 Secrets 中设置了 YT_COOKIES_B64，则解码写入文件
+      # 如何获取 cookies：见下方说明
+      - name: 写入 YouTube Cookies（如已配置）
+        env:
+          YT_COOKIES_B64: ${{ secrets.YT_COOKIES_B64 }}
+        run: |
+          if [ -n "$YT_COOKIES_B64" ]; then
+            echo "$YT_COOKIES_B64" | base64 -d > /tmp/yt_cookies.txt
+            echo "✅ YouTube cookies 已写入 /tmp/yt_cookies.txt"
+            echo "YT_COOKIES_FILE=/tmp/yt_cookies.txt" >> $GITHUB_ENV
+          else
+            echo "ℹ️  未配置 YT_COOKIES_B64，以匿名方式抓取（字幕成功率较低）"
+          fi
+      
       - name: 恢复去重数据库缓存
         uses: actions/cache@v4
         with:
