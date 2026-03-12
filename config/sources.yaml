@@ -28,6 +28,9 @@ youtube:
   - name: "Cardiology Explained"            # 心电图/心律失常临床讲解
     channel_id: "UCsmbIcMjBAzxFBNPl1jFbzQ"
 
+  - name: "Daily Cardiology"            # 心电图/心律失常临床讲解
+    channel_id: "UC9bIjJIDtLHr0TMgSUpzdcA"
+
   - name: "Oxford Academic Cardiovascular"  # 牛津心血管期刊视频摘要
     channel_id: "UCqHiHHUeBoNpVvWNkTkRnXA"
 
@@ -61,11 +64,8 @@ rss_blogs:
   # ── 🇨🇳 中文科研资讯平台 ─────────────────────────────────
   # 注意：部分平台 RSS 路径可能随版本更新变化，若某条为空请检查最新地址
 
-  - name: "科学网-心血管"
-    url: "http://www.sciencenet.cn/xml/blog.aspx?di=cardiovascular"
-
-  - name: "科学网-神经科学"
-    url: "http://www.sciencenet.cn/xml/blog.aspx?di=neuroscience"
+  - name: "科学网-医药健康"
+    url: "http://www.sciencenet.cn/xml/paper.aspx?di=1"
 
   - name: "生物谷-心血管"
     url: "https://www.bioon.com/rss/cardiovascular.rss"
@@ -267,7 +267,67 @@ arxiv:
     query: "cat:cs.LG+AND+(ti:few-shot+OR+ti:transfer+learning)+AND+ti:medical"
     max_results: 3
 
-
+# ── 🔥 热门新架构 ─────────────────────────────────────────
+ 
+  - name: "KAN — Kolmogorov-Arnold Networks"
+    # 2024年爆火的KAN网络，用可学习激活函数替代MLP中固定权重
+    query: "cat:cs.LG+AND+(ti:KAN+OR+ti:Kolmogorov-Arnold)"
+    max_results: 3
+ 
+  - name: "Mamba / 状态空间模型 SSM"
+    # 线性复杂度序列建模，时序生理信号的有力竞争者
+    query: "cat:cs.LG+AND+(ti:Mamba+OR+ti:state+space+model+OR+ti:SSM)+AND+(ti:sequence+OR+ti:time+series+OR+ti:signal)"
+    max_results: 3
+ 
+  - name: "Mamba 医学应用"
+    # Mamba 在医学图像/信号中的应用
+    query: "cat:cs.LG+AND+(ti:Mamba+OR+ti:SSM)+AND+(ti:medical+OR+ti:clinical+OR+ti:biomedical)"
+    max_results: 3
+ 
+  - name: "YOLO 系列目标检测"
+    # YOLOv9/v10/v11 及医学影像目标检测
+    query: "cat:cs.CV+AND+(ti:YOLO+OR+ti:you+only+look+once)"
+    max_results: 3
+ 
+  - name: "YOLO 医学影像检测"
+    # YOLO 在病灶检测、细胞识别等医学场景的应用
+    query: "cat:cs.CV+AND+ti:YOLO+AND+(ti:medical+OR+ti:lesion+OR+ti:detection+OR+ti:segmentation)"
+    max_results: 3
+ 
+  - name: "Vision Transformer / ViT 变体"
+    # ViT、Swin Transformer、DeiT 等视觉Transformer
+    query: "cat:cs.CV+AND+(ti:vision+transformer+OR+ti:ViT+OR+ti:Swin+Transformer)"
+    max_results: 3
+ 
+  - name: "图神经网络 GNN 医学"
+    # GNN 在药物发现、疾病预测、脑网络分析中的应用
+    query: "cat:cs.LG+AND+(ti:graph+neural+network+OR+ti:GNN)+AND+(ti:medical+OR+ti:brain+OR+ti:drug)"
+    max_results: 3
+ 
+  - name: "扩散模型 Diffusion 医学"
+    # Diffusion Model 在医学图像生成/增强/去噪中的应用
+    query: "cat:cs.CV+AND+ti:diffusion+AND+(ti:medical+OR+ti:MRI+OR+ti:CT+OR+ti:ultrasound)"
+    max_results: 3
+ 
+  - name: "大语言模型 LLM 医学"
+    # LLM / ChatGPT / GPT-4 在医学问答、报告生成中的应用
+    query: "cat:cs.CL+AND+(ti:large+language+model+OR+ti:LLM+OR+ti:GPT)+AND+(ti:medical+OR+ti:clinical+OR+ti:health)"
+    max_results: 3
+ 
+  - name: "多模态医学 AI"
+    # 融合文本、图像、信号的多模态医学模型
+    query: "cat:cs.LG+AND+ti:multimodal+AND+(ti:medical+OR+ti:clinical+OR+ti:ECG+OR+ti:EEG)"
+    max_results: 3
+ 
+  - name: "可解释 AI / XAI 医学"
+    # 医学场景的可解释性，SHAP、Grad-CAM 等
+    query: "cat:cs.LG+AND+(ti:explainable+OR+ti:interpretable+OR+ti:XAI)+AND+(ti:medical+OR+ti:clinical)"
+    max_results: 3
+ 
+  - name: "联邦学习 医学隐私"
+    # 多中心医疗数据隐私保护训练
+    query: "cat:cs.LG+AND+ti:federated+learning+AND+(ti:medical+OR+ti:health+OR+ti:clinical)"
+    max_results: 3
 # ═══════════════════════════════════════════════════════════
 # 四、播客
 # ═══════════════════════════════════════════════════════════
@@ -335,5 +395,14 @@ hackernews:
     - "neural network"
     - "machine learning"
     - "foundation model"
+    # 热门新架构
+    - "KAN"
+    - "Mamba"
+    - "state space model"
+    - "YOLO"
+    - "diffusion model"
+    - "multimodal"
+    - "federated learning"
+    - "graph neural"
   min_score: 80
   max_items: 4
