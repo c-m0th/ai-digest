@@ -7,7 +7,7 @@
 settings:
   max_items_per_source: 3          # 每个来源最多处理几条（源多时建议 2-3）
   max_content_chars: 12000         # 送入 Claude 的最大字符数
-  days_lookback: 3                 # 只看最近几天的内容
+  days_lookback: 2                 # 只看最近几天的内容
   language_hint: "中文输出，专业术语保留英文原文"
 
 
@@ -86,9 +86,6 @@ rss_blogs:
     url: "http://muchong.com/html/rss/rss_forum.xml?fid=109"
 
   # ── 🌐 国际医学 AI / 生物医学信号 ───────────────────────
-
-  - name: "The Medical Futurist"
-    url: "https://medicalfuturist.com/feed/"
 
   - name: "Nature Machine Intelligence"
     url: "https://www.nature.com/natmachintell.rss"
@@ -333,6 +330,8 @@ hackernews:
     # 深度学习通用
     - "deep learning"
     - "transformer"
+    - "KAN"
+    - "mamba"
     - "neural network"
     - "machine learning"
     - "foundation model"
