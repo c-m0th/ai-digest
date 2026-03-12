@@ -84,6 +84,9 @@ rss_blogs:
   - name: "Nature Machine Intelligence"
     url: "https://www.nature.com/natmachintell.rss"
 
+  - name: "Signals"
+    url: "https://www.mdpi.com/rss/journal/signals"
+
   - name: "Papers With Code Latest"
     url: "https://paperswithcode.com/latest/rss"
 
@@ -111,9 +114,6 @@ rss_blogs:
 
   - name: "European Heart Journal"
     url: "https://academic.oup.com/rss/site_5394/advanceAccess_3507.xml"
-
-  - name: "JAMA Cardiology"
-    url: "https://jamanetwork.com/rss/site_3/68.xml"
 
   - name: "Heart Rhythm Journal"            # 心律失常专业期刊
     url: "https://www.heartrhythmjournal.com/rss/articles"
