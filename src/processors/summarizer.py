@@ -18,17 +18,17 @@ logger = get_logger("summarizer")
 # ─────────────────────────────────────────────────────────
 PROVIDERS = [
     {
-        "name": "Gemini",                          # 优先用：每天1500次免费
-        "env_key": "GEMINI_API_KEY",
-        "type": "gemini",
-        "model": "gemini-2.0-flash",
-    },
-    {
-        "name": "DeepSeek",                        # 备用：极便宜（¥1/百万token）
+        "name": "DeepSeek",                        # 优先用：性价比高（¥1/百万token）
         "env_key": "DEEPSEEK_API_KEY",
         "type": "openai_compat",
         "model": "deepseek-chat",
         "base_url": "https://api.deepseek.com/v1",
+    },
+    {
+        "name": "Gemini",                          # 备用用：每天1500次免费
+        "env_key": "GEMINI_API_KEY",
+        "type": "gemini",
+        "model": "gemini-2.0-flash",
     },
     {
         "name": "Claude",                          # 备用
