@@ -7,8 +7,8 @@
 settings:
   max_items_per_source: 3          # 每个来源最多处理几条（源多时建议 2-3）
   max_content_chars: 12000         # 送入 Claude 的最大字符数
-  days_lookback: 2                 # 只看最近几天的内容
-  language_hint: "中文输出，专业术语保留英文原文"
+  days_lookback: 7                 # 只看最近几天的内容
+  language_hint: "中文输出，简洁，准确，专业术语保留英文原文"
 
 
 # ═══════════════════════════════════════════════════════════
@@ -50,9 +50,6 @@ youtube:
 
   - name: "Two Minute Papers"
     channel_id: "UCbfYPyITQ-7l4upoX8nvctg"
-
-  - name: "Umar Jamil"                      # Transformer 从零实现
-    channel_id: "UCmOwsoHty5PrmE-3QhUBfPQ"
 
 
 # ═══════════════════════════════════════════════════════════
