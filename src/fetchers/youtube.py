@@ -1,7 +1,6 @@
 """
 fetchers/youtube.py — 抓取 YouTube 频道最新视频及字幕
 
-反爬策略：
 1. feedparser 携带真实浏览器 User-Agent 请求 YouTube RSS
 2. 字幕优先用 yt-dlp（内置反爬，支持 cookies），其次 youtube-transcript-api
 3. 两者均失败则用视频描述作为内容
