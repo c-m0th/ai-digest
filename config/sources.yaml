@@ -67,11 +67,8 @@ rss_blogs:
   - name: "科学网-医药健康"
     url: "http://www.sciencenet.cn/xml/paper.aspx?di=1"
 
-  - name: "生物谷-心血管"
-    url: "https://www.bioon.com/rss/cardiovascular.rss"
-
-  - name: "生物谷-神经科学"
-    url: "https://www.bioon.com/rss/neuroscience.rss"
+  - name: "Bio-IT World"
+    url: "http://www.bio-itworld.com/RSS/BioIT_WorldNews_RSS.aspx"
 
   - name: "XMOL 生命科学"
     url: "https://www.x-mol.com/news/rss?subject=life"
@@ -93,6 +90,9 @@ rss_blogs:
   - name: "Papers With Code Latest"
     url: "https://paperswithcode.com/latest/rss"
 
+  - name: "Computational biology and bioinformatics"
+    url: "https://www.nature.com/subjects/computational-biology-and-bioinformatics.rss"
+
   # ── 🧠 纯临床神经科学期刊 ────────────────────────────────
 
   - name: "Brain - Oxford Neurology"        # 牛津《Brain》，顶级神经病学期刊
@@ -100,9 +100,6 @@ rss_blogs:
 
   - name: "Neurology - AAN"                 # 美国神经病学学会官方期刊
     url: "https://n.neurology.org/rss/ahead.xml"
-
-  - name: "JAMA Neurology"
-    url: "https://jamanetwork.com/rss/site_3/67.xml"
 
   - name: "Lancet Neurology"
     url: "https://www.thelancet.com/rssfeed/laneur_current.xml"
