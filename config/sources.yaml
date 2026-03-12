@@ -1,13 +1,13 @@
 # ============================================================
 # config/sources.yaml — 订阅源配置
-# 方向：心脑医学信号处理 + 深度学习
+# 方向：心脑医学信号处理 + 深度学习 + 纯临床心脑疾病 + 中文科研平台
 # 复制为 sources.yaml 后按需注释/删除不需要的条目
 # ============================================================
 
 settings:
-  max_items_per_source: 3          # 每个来源最多处理几条（源较多时建议2-3）
+  max_items_per_source: 3          # 每个来源最多处理几条（源多时建议 2-3）
   max_content_chars: 12000         # 送入 Claude 的最大字符数
-  days_lookback: 1                 # 只看最近几天的内容
+  days_lookback: 3                 # 只看最近几天的内容
   language_hint: "中文输出，专业术语保留英文原文"
 
 
@@ -33,22 +33,22 @@ youtube:
 
   # ── 深度学习 / AI ────────────────────────────────────────
 
-  - name: "Andrej Karpathy"                 # 深度学习底层原理
+  - name: "Andrej Karpathy"
     channel_id: "UCXUPKJO5MZQMU11oa6u6KbA"
 
   - name: "Yannic Kilcher"                  # 顶会论文精读，含医疗AI
     channel_id: "UCZHmQk67mSJgfCCTn7xBfew"
 
-  - name: "StatQuest with Josh Starmer"     # 统计+ML基础，生物医学背景友好
+  - name: "StatQuest with Josh Starmer"     # 统计+ML，生物医学背景友好
     channel_id: "UCtYLUTtgS3k1Fg4y5tAhLbw"
 
-  - name: "3Blue1Brown"                     # 神经网络数学可视化
+  - name: "3Blue1Brown"
     channel_id: "UCYO_jab_esuFRV4b17AJtAg"
 
-  - name: "Two Minute Papers"               # AI论文2分钟速览
+  - name: "Two Minute Papers"
     channel_id: "UCbfYPyITQ-7l4upoX8nvctg"
 
-  - name: "Umar Jamil"                      # Transformer/注意力机制从零实现
+  - name: "Umar Jamil"                      # Transformer 从零实现
     channel_id: "UCmOwsoHty5PrmE-3QhUBfPQ"
 
 
@@ -58,56 +58,114 @@ youtube:
 
 rss_blogs:
 
-  # ── 医学 AI / 生物医学信号 ───────────────────────────────
+  # ── 🇨🇳 中文科研资讯平台 ─────────────────────────────────
+  # 注意：部分平台 RSS 路径可能随版本更新变化，若某条为空请检查最新地址
 
-  - name: "The Medical Futurist"            # 数字健康与医疗AI趋势
+  - name: "科学网-心血管"
+    url: "http://www.sciencenet.cn/xml/blog.aspx?di=cardiovascular"
+
+  - name: "科学网-神经科学"
+    url: "http://www.sciencenet.cn/xml/blog.aspx?di=neuroscience"
+
+  - name: "生物谷-心血管"
+    url: "https://www.bioon.com/rss/cardiovascular.rss"
+
+  - name: "生物谷-神经科学"
+    url: "https://www.bioon.com/rss/neuroscience.rss"
+
+  - name: "XMOL 生命科学"
+    url: "https://www.x-mol.com/news/rss?subject=life"
+
+  - name: "XMOL 医学"
+    url: "https://www.x-mol.com/news/rss?subject=medicine"
+
+  - name: "艾思科蓝-医学"
+    url: "https://www.ais.cn/rss/medical.xml"
+
+  - name: "小木虫-生物医学"
+    url: "http://muchong.com/html/rss/rss_forum.xml?fid=109"
+
+  # ── 🌐 国际医学 AI / 生物医学信号 ───────────────────────
+
+  - name: "The Medical Futurist"
     url: "https://medicalfuturist.com/feed/"
 
-  - name: "Nature Machine Intelligence"     # Nature子刊，医学AI高质量论文
+  - name: "Nature Machine Intelligence"
     url: "https://www.nature.com/natmachintell.rss"
 
-  - name: "AHA Journals - Circulation"      # 美国心脏协会期刊最新文章
-    url: "https://www.ahajournals.org/action/showFeed?type=etoc&feed=rss&jc=circ"
-
-  - name: "Papers With Code Latest"         # 最新SOTA论文+代码
+  - name: "Papers With Code Latest"
     url: "https://paperswithcode.com/latest/rss"
 
-  # ── 深度学习 / AI ────────────────────────────────────────
+  # ── 🧠 纯临床神经科学期刊 ────────────────────────────────
 
-  - name: "Lilian Weng's Blog"              # OpenAI研究员，深度长文
+  - name: "Brain - Oxford Neurology"        # 牛津《Brain》，顶级神经病学期刊
+    url: "https://academic.oup.com/rss/site_5182/3188.xml"
+
+  - name: "Neurology - AAN"                 # 美国神经病学学会官方期刊
+    url: "https://n.neurology.org/rss/ahead.xml"
+
+  - name: "JAMA Neurology"
+    url: "https://jamanetwork.com/rss/site_3/67.xml"
+
+  - name: "Lancet Neurology"
+    url: "https://www.thelancet.com/rssfeed/laneur_current.xml"
+
+  - name: "Nature Neuroscience"
+    url: "https://www.nature.com/neuro.rss"
+
+  # ── ❤️ 纯临床心血管期刊 ──────────────────────────────────
+
+  - name: "JACC - Journal of ACC"           # 美国心脏病学会旗舰期刊
+    url: "https://www.jacc.org/rss/current_issue"
+
+  - name: "European Heart Journal"
+    url: "https://academic.oup.com/rss/site_5394/advanceAccess_3507.xml"
+
+  - name: "JAMA Cardiology"
+    url: "https://jamanetwork.com/rss/site_3/68.xml"
+
+  - name: "Heart Rhythm Journal"            # 心律失常专业期刊
+    url: "https://www.heartrhythmjournal.com/rss/articles"
+
+  - name: "Stroke - AHA Journal"
+    url: "https://www.ahajournals.org/action/showFeed?type=etoc&feed=rss&jc=str"
+
+  - name: "AHA Journals - Circulation"
+    url: "https://www.ahajournals.org/action/showFeed?type=etoc&feed=rss&jc=circ"
+
+  # ── 🤖 深度学习 ─────────────────────────────────────────
+
+  - name: "Lilian Weng's Blog"
     url: "https://lilianweng.github.io/index.xml"
 
-  - name: "Ahead of AI (Sebastian Raschka)" # LLM/深度学习前沿月刊
+  - name: "Ahead of AI (Sebastian Raschka)"
     url: "https://magazine.sebastianraschka.com/feed"
 
-  - name: "The Batch (DeepLearning.AI)"     # 吴恩达团队周报
+  - name: "The Batch (DeepLearning.AI)"
     url: "https://www.deeplearning.ai/the-batch/feed/"
 
-  - name: "Chip Huyen - AI Engineering"     # ML系统工程实践
+  - name: "Chip Huyen - AI Engineering"
     url: "https://huyenchip.substack.com/feed"
 
 
 # ═══════════════════════════════════════════════════════════
 # 三、ArXiv 论文订阅
 #
-# 常用分类：
-#   eess.SP  = 信号处理（Signal Processing）
+# 分类说明：
+#   eess.SP  = 信号处理
 #   eess.IV  = 图像/视频处理（医学影像）
 #   cs.LG    = 机器学习
 #   cs.CV    = 计算机视觉
 #   q-bio.NC = 计算神经科学
+#   q-bio.TO = 组织与器官（含心血管基础）
 # ═══════════════════════════════════════════════════════════
 
 arxiv:
 
-  # ── 心脏信号 ─────────────────────────────────────────────
+  # ── ❤️ 心脏信号 + AI ──────────────────────────────────────
 
   - name: "ECG 深度学习"
     query: "cat:eess.SP+AND+(ti:ECG+OR+ti:electrocardiogram+OR+ti:arrhythmia)"
-    max_results: 4
-
-  - name: "MCG 深度学习"
-    query: "cat:eess.SP+AND+(ti:MCG+OR+ti:electrocardiogram+OR+ti:arrhythmia)"
     max_results: 4
 
   - name: "心房颤动 / 心律失常检测"
@@ -118,11 +176,11 @@ arxiv:
     query: "cat:eess.SP+AND+(ti:phonocardiogram+OR+ti:heart+sound+OR+ti:PCG)"
     max_results: 3
 
-  - name: "心血管疾病预测"
+  - name: "心血管疾病 AI 预测"
     query: "cat:cs.LG+AND+(ti:cardiovascular+OR+ti:cardiac)+AND+ti:deep+learning"
     max_results: 3
 
-  # ── 脑信号 ───────────────────────────────────────────────
+  # ── 🧠 脑信号 + AI ────────────────────────────────────────
 
   - name: "EEG 深度学习"
     query: "cat:eess.SP+AND+(ti:EEG+OR+ti:electroencephalogram)+AND+ti:deep+learning"
@@ -136,7 +194,7 @@ arxiv:
     query: "cat:eess.IV+AND+(ti:fMRI+OR+ti:neuroimaging+OR+ti:brain+MRI)"
     max_results: 3
 
-  - name: "癫痫检测"
+  - name: "癫痫 AI 检测"
     query: "cat:cs.LG+AND+(ti:epilepsy+OR+ti:seizure+detection)"
     max_results: 3
 
@@ -144,21 +202,65 @@ arxiv:
     query: "cat:eess.SP+AND+(ti:sleep+staging+OR+ti:sleep+apnea+OR+ti:polysomnography)"
     max_results: 3
 
-  # ── 医学信号通用方法 ──────────────────────────────────────
+  # ── ❤️ 纯临床心血管（无 AI/ML 约束）─────────────────────
+
+  - name: "冠心病 / 急性心肌梗死"
+    query: "(ti:coronary+artery+disease+OR+ti:myocardial+infarction)+AND+(ti:mechanism+OR+ti:treatment+OR+ti:prognosis)"
+    max_results: 3
+
+  - name: "心力衰竭"
+    query: "ti:heart+failure+AND+(ti:pathophysiology+OR+ti:therapy+OR+ti:biomarker)"
+    max_results: 3
+
+  - name: "高血压机制与治疗"
+    query: "(ti:hypertension+OR+ti:blood+pressure)+AND+(ti:mechanism+OR+ti:treatment)"
+    max_results: 3
+
+  - name: "心脏电生理 / 离子通道"
+    query: "cat:q-bio.NC+AND+(ti:cardiac+electrophysiology+OR+ti:ion+channel+OR+ti:action+potential)"
+    max_results: 3
+
+  - name: "动脉粥样硬化 / 斑块"
+    query: "(ti:atherosclerosis+OR+ti:plaque)+AND+(ti:mechanism+OR+ti:inflammation+OR+ti:imaging)"
+    max_results: 3
+
+  # ── 🧠 纯临床脑疾病（无 AI/ML 约束）─────────────────────
+
+  - name: "阿尔茨海默病"
+    query: "(ti:Alzheimer+OR+ti:dementia)+AND+(ti:biomarker+OR+ti:pathology+OR+ti:treatment)"
+    max_results: 3
+
+  - name: "帕金森病"
+    query: "ti:Parkinson+AND+(ti:mechanism+OR+ti:therapy+OR+ti:dopamine)"
+    max_results: 3
+
+  - name: "脑卒中 / 缺血性损伤"
+    query: "(ti:stroke+OR+ti:cerebral+ischemia+OR+ti:cerebral+infarction)+AND+(ti:mechanism+OR+ti:neuroprotection)"
+    max_results: 3
+
+  - name: "癫痫基础与临床"
+    query: "(ti:epilepsy+OR+ti:seizure)+AND+(ti:mechanism+OR+ti:genetics+OR+ti:treatment)"
+    max_results: 3
+
+  - name: "抑郁症 / 焦虑神经机制"
+    query: "cat:q-bio.NC+AND+(ti:depression+OR+ti:anxiety)+AND+(ti:neural+OR+ti:circuit+OR+ti:neurotransmitter)"
+    max_results: 3
+
+  # ── 🔬 医学信号通用方法 ──────────────────────────────────
 
   - name: "生物医学信号 Transformer"
     query: "cat:cs.LG+AND+(ti:biosignal+OR+ti:physiological+signal)+AND+ti:transformer"
     max_results: 3
 
-  - name: "可穿戴设备信号处理"
+  - name: "可穿戴设备 PPG/IMU"
     query: "cat:eess.SP+AND+(ti:wearable+OR+ti:PPG+OR+ti:IMU)+AND+ti:deep+learning"
     max_results: 3
 
-  - name: "医学时序信号基础模型"
+  - name: "医学时序基础模型"
     query: "cat:cs.LG+AND+(ti:foundation+model+OR+ti:pretrained)+AND+(ti:ECG+OR+ti:EEG+OR+ti:biosignal)"
     max_results: 3
 
-  # ── 深度学习通用方法 ──────────────────────────────────────
+  # ── 🤖 深度学习通用方法 ──────────────────────────────────
 
   - name: "自监督 / 对比学习"
     query: "cat:cs.LG+AND+(ti:self-supervised+OR+ti:contrastive+learning)"
@@ -177,7 +279,7 @@ podcasts:
 
   # ── 医学 / 神经科学 ──────────────────────────────────────
 
-  - name: "Brain Science with Ginger Campbell"   # 顶级神经科学播客，深度学术访谈
+  - name: "Brain Science with Ginger Campbell"   # 顶级神经科学播客，学术深度访谈
     url: "https://brainsciencepodcast.com/bsp.xml"
     transcribe: false
 
@@ -185,21 +287,21 @@ podcasts:
     url: "https://feeds.buzzsprout.com/1252790.rss"
     transcribe: false
 
-  - name: "Huberman Lab"                         # 斯坦福神经科学，脑科学应用
+  - name: "Huberman Lab"                         # 斯坦福神经科学与脑健康
     url: "https://feeds.megaphone.fm/hubermanlab"
     transcribe: false
 
   # ── AI / 深度学习 ─────────────────────────────────────────
 
-  - name: "TWIML AI Podcast"                     # ML/DL学术与工业前沿访谈
+  - name: "TWIML AI Podcast"
     url: "https://twimlai.com/feed"
     transcribe: false
 
-  - name: "Machine Learning Street Talk"         # 顶级研究者深度对话
+  - name: "Machine Learning Street Talk"
     url: "https://feeds.buzzsprout.com/1511458.rss"
     transcribe: false
 
-  - name: "Practical AI"                         # AI工程实践，偏应用落地
+  - name: "Practical AI"
     url: "https://changelog.com/practicalai/feed"
     transcribe: false
 
@@ -222,11 +324,17 @@ hackernews:
     - "health AI"
     - "BCI"
     - "neuroscience"
+    # 临床疾病
+    - "Alzheimer"
+    - "Parkinson"
+    - "stroke"
+    - "heart failure"
+    - "epilepsy"
     # 深度学习通用
     - "deep learning"
     - "transformer"
     - "neural network"
     - "machine learning"
     - "foundation model"
-  min_score: 80                    # 医学类帖子分数偏低，适当降低门槛
+  min_score: 80
   max_items: 4
