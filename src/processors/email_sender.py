@@ -61,41 +61,55 @@ def render_email(items: list[dict]) -> str:
 
 
 def send_email(items: list[dict]) -> bool:
-    """发送摘要邮件，返回是否成功"""
+    """
+    发送摘要邮件，返回是否成功。
+    EMAIL_TO 支持多个收件人，用英文逗号分隔：
+      EMAIL_TO=a@gmail.com,b@qq.com,c@163.com
+    """
     if not items:
         logger.info("[Email] 没有新内容，跳过发送")
         return False
 
-    email_from = os.environ.get("EMAIL_ADDRESS", "")
+    email_from     = os.environ.get("EMAIL_ADDRESS", "")
     email_password = os.environ.get("EMAIL_PASSWORD", "")
-    email_to = os.environ.get("EMAIL_TO", email_from)
-    smtp_host = os.environ.get("SMTP_HOST", "smtp.gmail.com")
-    smtp_port = int(os.environ.get("SMTP_PORT", "465"))
+    smtp_host      = os.environ.get("SMTP_HOST", "smtp.gmail.com")
+    smtp_port      = int(os.environ.get("SMTP_PORT", "465"))
 
     if not email_from or not email_password:
         logger.error("[Email] 未设置 EMAIL_ADDRESS 或 EMAIL_PASSWORD 环境变量")
         return False
+
+    # ── 解析多收件人（支持逗号/分号分隔）────────────────────
+    raw_to = os.environ.get("EMAIL_TO", email_from)
+    recipients = [
+        addr.strip()
+        for addr in raw_to.replace(";", ",").split(",")
+        if addr.strip()
+    ]
+    if not recipients:
+        recipients = [email_from]
 
     html_body = render_email(items)
     today = datetime.now().strftime("%Y-%m-%d")
 
     msg = MIMEMultipart("alternative")
     msg["Subject"] = f"📚 每日学术摘要 | {today} | {len(items)}篇精选"
-    msg["From"] = f"AI Digest <{email_from}>"
-    msg["To"] = email_to
+    msg["From"]    = f"AI Digest <{email_from}>"
+    msg["To"]      = ", ".join(recipients)
     msg.attach(MIMEText(html_body, "html", "utf-8"))
 
     try:
         if smtp_port == 465:
             with smtplib.SMTP_SSL(smtp_host, smtp_port) as server:
                 server.login(email_from, email_password)
-                server.send_message(msg)
+                server.sendmail(email_from, recipients, msg.as_string())
         else:
             with smtplib.SMTP(smtp_host, smtp_port) as server:
                 server.starttls()
                 server.login(email_from, email_password)
-                server.send_message(msg)
-        logger.info(f"[Email] 成功发送至 {email_to}，共 {len(items)} 条内容")
+                server.sendmail(email_from, recipients, msg.as_string())
+
+        logger.info(f"[Email] 成功发送至 {len(recipients)} 位收件人：{recipients}，共 {len(items)} 条")
         return True
     except Exception as e:
         logger.error(f"[Email] 发送失败: {e}")
