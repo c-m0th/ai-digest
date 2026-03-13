@@ -159,6 +159,10 @@ arxiv:
     query: "cat:eess.SP+AND+(ti:ECG+OR+ti:electrocardiogram+OR+ti:arrhythmia)"
     max_results: 4
 
+  - name: "ECG 机器学习"
+    query: "cat:eess.SP+AND+(ti:ECG+OR+ti:electroencephalogram)+AND+ti:machine+learning"
+    max_results: 4
+
   - name: "心房颤动 / 心律失常检测"
     query: "cat:cs.LG+AND+(ti:atrial+fibrillation+OR+ti:arrhythmia+detection)"
     max_results: 3
@@ -175,6 +179,10 @@ arxiv:
 
   - name: "EEG 深度学习"
     query: "cat:eess.SP+AND+(ti:EEG+OR+ti:electroencephalogram)+AND+ti:deep+learning"
+    max_results: 4
+
+  - name: "EEG 机器学习"
+    query: "cat:eess.SP+AND+(ti:EEG+OR+ti:electroencephalogram)+AND+ti:machine+learning"
     max_results: 4
 
   - name: "脑机接口 BCI"
@@ -398,5 +406,5 @@ hackernews:
     - "multimodal"
     - "federated learning"
     - "graph neural"
-  min_score: 80
+  min_score: 70
   max_items: 4
