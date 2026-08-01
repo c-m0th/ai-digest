@@ -75,7 +75,7 @@
 
 推荐优先申请 **Google Gemini**，因为完全免费。
 
-#### 方式A：Google Gemini（推荐，免费）
+#### 方式A：Google Gemini
 
 1. 打开 [aistudio.google.com](https://aistudio.google.com)
 2. 用 Google 账号登录（没有就先注册一个 Google 账号）
@@ -83,15 +83,15 @@
 4. 点击 **"Create API key"**
 5. 复制生成的密钥（以 `AIzaSy` 开头），**先粘贴到记事本暂存**，后面要用
 
-#### 方式B：Anthropic Claude（备用，新账号送$5）
+#### 方式B：Deepseek
 
-1. 打开 [console.anthropic.com](https://console.anthropic.com)
+1. 打开 [https://platform.deepseek.com/api_keys](https://platform.deepseek.com/api_keys)
 2. 注册/登录账号
 3. 左侧菜单点击 **"API Keys"**
-4. 点击 **"Create Key"**
+4. 点击 **"创建 API Key"**
 5. 复制密钥（以 `sk-ant-` 开头），暂存到记事本
 
-> 💡 两个都申请也没问题，程序会自动优先用 Gemini，失败了自动切换到 Claude，提高成功率。
+> 💡 两个都申请也没问题，程序会自动优先用前面的api key，失败了自动切换到后面的，提高成功率。
 
 ---
 
