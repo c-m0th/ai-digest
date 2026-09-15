@@ -1,6 +1,6 @@
 # ============================================================
-# config/sources.yaml — 订阅源配置
-# 方向：心脑医学信号处理 + 深度学习 + 纯临床心脑疾病 + 中文科研平台
+# config/sources.yaml  订阅源配置
+# 方向：心磁 / 脑磁 / 心电 / 脑电 + 信号处理、物理建模与相关 AI
 # 复制为 sources.yaml 后按需注释/删除不需要的条目
 # ============================================================
 
@@ -17,39 +17,19 @@ settings:
 
 youtube:
 
-  # ── 心脑信号处理 / 生物医学工程 ──────────────────────────
+  # ── 心脑信号处理 / 方法课程与学术讲座 ──────────────────
 
-  - name: "NeuroMatch Academy"              # 计算神经科学课程，含EEG/fMRI建模
-    channel_id: "UC4s3TV2-GWFoFaI5USKWJmA"
+  - name: "MNE-Python"
+    channel_id: "UCMH3gJyy3tNL0Wui7aoUjIA"          # EEG/MEG 处理、配准与源空间分析
 
-  - name: "IBRO Neuroscience"               # 国际脑研究组织讲座
-    channel_id: "UCCjnQjPTvjdoVLgkDZC9i7A"
+  - name: "FieldTrip Toolbox"
+    channel_id: "UCzB9pvyHL3uNpzN1Iz_cOjA"          # EEG/MEG 实验、时频分析与源定位
 
-  - name: "Cardiology Explained"            # 心电图/心律失常临床讲解
-    channel_id: "UCsmbIcMjBAzxFBNPl1jFbzQ"
+  - name: "EEGLAB and EEG Neurotech"
+    channel_id: "UCK8x1bdiHWmT0yCNEjTcEvA"          # EEG 预处理、ICA 与时频分析
 
-  - name: "Daily Cardiology"            # 心电图/心律失常临床讲解
-    channel_id: "UC9bIjJIDtLHr0TMgSUpzdcA"
-
-  - name: "Oxford Academic Cardiovascular"  # 牛津心血管期刊视频摘要
-    channel_id: "UCqHiHHUeBoNpVvWNkTkRnXA"
-
-  # ── 深度学习 / AI ────────────────────────────────────────
-
-  - name: "Andrej Karpathy"
-    channel_id: "UCXUPKJO5MZQMU11oa6u6KbA"
-
-  - name: "Yannic Kilcher"                  # 顶会论文精读，含医疗AI
-    channel_id: "UCZHmQk67mSJgfCCTn7xBfew"
-
-  - name: "StatQuest with Josh Starmer"     # 统计+ML，生物医学背景友好
-    channel_id: "UCtYLUTtgS3k1Fg4y5tAhLbw"
-
-  - name: "3Blue1Brown"
-    channel_id: "UCYO_jab_esuFRV4b17AJtAg"
-
-  - name: "Two Minute Papers"
-    channel_id: "UCbfYPyITQ-7l4upoX8nvctg"
+  - name: "CuttingEEG"
+    channel_id: "UCMIYoORlCnvo9bahMCPF0PQ"          # EEG/MEG 方法会议与研究讲座
 
 
 # ═══════════════════════════════════════════════════════════
@@ -58,310 +38,223 @@ youtube:
 
 rss_blogs:
 
-  # ── 🇨🇳 中文科研资讯平台 ─────────────────────────────────
-  # 注意：部分平台 RSS 路径可能随版本更新变化，若某条为空请检查最新地址
+  # ── PubMed 关键词定向论文订阅 ──────────────────────────
+  # 使用标题/摘要约束研究对象，补充未上传 arXiv 的期刊论文
+  # description 为截断摘要，较完整内容位于 RSS 的 content:encoded 字段
 
-  - name: "科学网-医药健康"
-    url: "http://www.sciencenet.cn/xml/paper.aspx?di=1"
+  # 检索式：magnetocardiogra*[tiab] NOT (editorial[pt] OR comment[pt])
+  - name: "PubMed 心磁 MCG"
+    url: "https://pubmed.ncbi.nlm.nih.gov/rss/search/1VA-U_2oiXyq9lM7V8nTqPtFmJ8gqMPvbk5hRJ-yV23nzYWMec/?limit=50&utm_campaign=pubmed-2&fc=20260915110535"
 
-  - name: "Bio-IT World"
-    url: "http://www.bio-itworld.com/RSS/BioIT_WorldNews_RSS.aspx"
+  # 检索式：(magnetocardiogra*[tiab] OR magnetoencephalogra*[tiab] OR biomagnetic[tiab]) AND ("optically pumped"[tiab] OR "atomic magnetometer"[tiab] OR OPM[tiab] OR OPMs[tiab]) NOT (editorial[pt] OR comment[pt])
+  - name: "PubMed 生物磁 OPM 测量"
+    url: "https://pubmed.ncbi.nlm.nih.gov/rss/search/1FmSTaOY8T6WqVhJ-nPoe00_Rnior8OG0LCPR9xBUvXBTSJ9M3/?limit=50&utm_campaign=pubmed-2&fc=20260915110558"
 
-  - name: "XMOL 生命科学"
-    url: "https://www.x-mol.com/news/rss?subject=life"
+  # 检索式：magnetoencephalogra*[tiab] AND (denois*[tiab] OR "noise suppression"[tiab] OR "source localization"[tiab] OR "source localisation"[tiab] OR "source reconstruction"[tiab] OR beamform*[tiab] OR "deep learning"[tiab] OR "machine learning"[tiab]) NOT ("trial protocol"[ti] OR "study protocol"[ti]) NOT (editorial[pt] OR comment[pt])
+  - name: "PubMed 脑磁信号处理与源定位"
+    url: "https://pubmed.ncbi.nlm.nih.gov/rss/search/1jye2CWYy7Vf8H3danwyY6zgYNUns4UqUVFdo9s21DHdnIeMcb/?limit=50&utm_campaign=pubmed-2&fc=20260915110839"
 
-  - name: "XMOL 医学"
-    url: "https://www.x-mol.com/news/rss?subject=medicine"
+  # 检索式：(electrocardiogra*[tiab] OR ECG[tiab] OR EKG[tiab]) AND (denois*[tiab] OR "signal processing"[tiab] OR "deep learning"[tiab] OR "machine learning"[tiab] OR "self-supervised"[tiab] OR "foundation model"[tiab] OR "lead reconstruction"[tiab] OR delineation[tiab]) NOT (editorial[pt] OR comment[pt])
+  - name: "PubMed 心电处理与 AI"
+    url: "https://pubmed.ncbi.nlm.nih.gov/rss/search/1TYjWBTBfCClh7GHJ35AKQ8aHYadRB_zA8gjtnWkf9cqyhukz5/?limit=50&utm_campaign=pubmed-2&fc=20260915110644"
 
-  - name: "艾思科蓝-医学"
-    url: "https://www.ais.cn/rss/medical.xml"
+  # 检索式：(electroencephalogra*[tiab] OR EEG[tiab]) AND (denois*[tiab] OR "artifact removal"[tiab] OR "artefact removal"[tiab] OR "deep learning"[tiab] OR "machine learning"[tiab] OR "self-supervised"[tiab] OR "foundation model"[tiab] OR "neural decoding"[tiab]) NOT (editorial[pt] OR comment[pt])
+  - name: "PubMed 脑电处理与 AI"
+    url: "https://pubmed.ncbi.nlm.nih.gov/rss/search/1pAhYGWnaLE9wUGA2qUJ-his7hLwgvOUAQJSMOIDdk8RevqEK-/?limit=50&utm_campaign=pubmed-2&fc=20260915110710"
 
-  - name: "小木虫-生物医学"
-    url: "http://muchong.com/html/rss/rss_forum.xml?fid=109"
+  # 检索式：(electrocardiogra*[tiab] OR ECG[tiab] OR magnetocardiogra*[tiab]) AND ("forward model"[tiab] OR "forward modeling"[tiab] OR "forward modelling"[tiab] OR "forward problem"[tiab] OR "inverse problem"[tiab] OR "finite element"[tiab] OR "boundary element"[tiab] OR "electrocardiographic imaging"[tiab]) NOT (editorial[pt] OR comment[pt])
+  - name: "PubMed 心脏电磁正逆问题"
+    url: "https://pubmed.ncbi.nlm.nih.gov/rss/search/1FKYAX__W2XxZYrWjROdpdcjcU66s0D0NEOmLsTUxyA120aspF/?limit=50&utm_campaign=pubmed-2&fc=20260915110736"
 
-  # ── 🌐 国际医学 AI / 生物医学信号 ───────────────────────
+  # ── 心脑信号论文 / 专题订阅 ──────────────────────────
 
-  - name: "Nature Machine Intelligence"
-    url: "https://www.nature.com/natmachintell.rss"
+  - name: "Nature Magnetoencephalography"          # 脑磁专题；仍可能包含综述或编辑精选
+    url: "https://www.nature.com/subjects/magnetoencephalography.rss"
 
-  - name: "Signals"
-    url: "https://www.mdpi.com/rss/journal/signals"
+  - name: "Nature Brain-machine Interface"          # 脑机接口专题；包含部分侵入式研究
+    url: "https://www.nature.com/subjects/brain-machine-interface.rss"
 
-  - name: "Papers With Code Latest"
-    url: "https://paperswithcode.com/latest/rss"
+  - name: "Journal of Neural Engineering"          # 神经信号、解码、建模与神经工程
+    url: "https://iopscience.iop.org/journal/rss/1741-2552"
 
-  - name: "Computational biology and bioinformatics"
-    url: "https://www.nature.com/subjects/computational-biology-and-bioinformatics.rss"
+  - name: "Physiological Measurement"          # 生理测量与信号方法；包含其他生理信号
+    url: "https://iopscience.iop.org/journal/rss/0967-3334"
 
-  # ── 🧠 纯临床神经科学期刊 ────────────────────────────────
+  # ── 公开数据 / 基准 / 可复现实验工具 ──────────────────────────
 
-  - name: "Brain - Oxford Neurology"        # 牛津《Brain》，顶级神经病学期刊
-    url: "https://academic.oup.com/rss/site_5182/3188.xml"
+  - name: "PhysioNet 数据与挑战更新"          # 公开生理数据、基准与挑战；含平台公告
+    url: "https://physionet.org/feed.xml"
 
-  - name: "Neurology - AAN"                 # 美国神经病学学会官方期刊
-    url: "https://n.neurology.org/rss/ahead.xml"
+  - name: "MNE-Python 正式版本"          # EEG/MEG 预处理与源定位工具更新
+    url: "https://github.com/mne-tools/mne-python/releases.atom"
 
-  - name: "Lancet Neurology"
-    url: "https://www.thelancet.com/rssfeed/laneur_current.xml"
+  - name: "Braindecode 正式版本"          # 心脑信号深度学习模型与实现更新
+    url: "https://github.com/braindecode/braindecode/releases.atom"
 
-  - name: "Nature Neuroscience"
-    url: "https://www.nature.com/neuro.rss"
+  - name: "MOABB 正式版本"          # EEG/BCI 数据集与统一评测流程
+    url: "https://github.com/NeuroTechX/moabb/releases.atom"
 
-  # ── ❤️ 纯临床心血管期刊 ──────────────────────────────────
-
-  - name: "JACC - Journal of ACC"           # 美国心脏病学会旗舰期刊
-    url: "https://www.jacc.org/rss/current_issue"
-
-  - name: "European Heart Journal"
-    url: "https://academic.oup.com/rss/site_5394/advanceAccess_3507.xml"
-
-  - name: "Heart Rhythm Journal"            # 心律失常专业期刊
-    url: "https://www.heartrhythmjournal.com/rss/articles"
-
-  - name: "Stroke - AHA Journal"
-    url: "https://www.ahajournals.org/action/showFeed?type=etoc&feed=rss&jc=str"
-
-  - name: "AHA Journals - Circulation"
-    url: "https://www.ahajournals.org/action/showFeed?type=etoc&feed=rss&jc=circ"
-
-  # ── 🤖 深度学习 ─────────────────────────────────────────
-
-  - name: "Lilian Weng's Blog"
-    url: "https://lilianweng.github.io/index.xml"
-
-  - name: "Ahead of AI (Sebastian Raschka)"
-    url: "https://magazine.sebastianraschka.com/feed"
-
-  - name: "The Batch (DeepLearning.AI)"
-    url: "https://www.deeplearning.ai/the-batch/feed/"
-
-  - name: "Chip Huyen - AI Engineering"
-    url: "https://huyenchip.substack.com/feed"
+  - name: "NeuroKit2 正式版本"          # ECG 等生理信号处理工具更新
+    url: "https://github.com/neuropsychology/NeuroKit/releases.atom"
 
 
 # ═══════════════════════════════════════════════════════════
 # 三、ArXiv 论文订阅
 #
-# 分类说明：
-#   eess.SP  = 信号处理
-#   eess.IV  = 图像/视频处理（医学影像）
-#   cs.LG    = 机器学习
-#   cs.CV    = 计算机视觉
-#   q-bio.NC = 计算神经科学
-#   q-bio.TO = 组织与器官（含心血管基础）
+# 检索说明：
+#   ti = 标题；ab = 摘要。跨分类检索，避免只限 cs.LG/eess.SP 漏检
+#   心磁/脑磁使用英文全称；不单独使用易产生歧义的 MCG/MEG 缩写
+#   AI 方法均与心脑信号相交；不订阅通用视觉模型或泛临床疾病
+#   沿用原配置的 + 分隔写法；%22...%22 表示完整短语
+#   官方语法：https://info.arxiv.org/help/api/user-manual.html
 # ═══════════════════════════════════════════════════════════
 
 arxiv:
 
-  # ── ❤️ 心脏信号 + AI ──────────────────────────────────────
+  # ── 心磁 / 脑磁 / 生物磁测量 ──────────────────────────
 
-  - name: "ECG 深度学习"
-    query: "cat:eess.SP+AND+(ti:ECG+OR+ti:electrocardiogram+OR+ti:arrhythmia)"
+  - name: "心磁 MCG 原始研究"
+    query: "(ti:magnetocardiography+OR+ab:magnetocardiography+OR+ti:magnetocardiogram+OR+ab:magnetocardiogram+OR+ti:magnetocardiographic+OR+ab:magnetocardiographic)"
     max_results: 4
 
-  - name: "ECG 机器学习"
-    query: "cat:eess.SP+AND+(ti:ECG+OR+ti:electroencephalogram)+AND+ti:machine+learning"
+  - name: "脑磁 MEG / OPM-MEG 原始研究"
+    query: "(ti:magnetoencephalography+OR+ab:magnetoencephalography+OR+ti:magnetoencephalographic+OR+ab:magnetoencephalographic+OR+ti:%22OPM-MEG%22+OR+ab:%22OPM-MEG%22)"
     max_results: 4
 
-  - name: "心房颤动 / 心律失常检测"
-    query: "cat:cs.LG+AND+(ti:atrial+fibrillation+OR+ti:arrhythmia+detection)"
+  - name: "生物磁传感 OPM / SQUID / 金刚石"
+    query: "(((ti:magnetocardiography+OR+ab:magnetocardiography+OR+ti:magnetocardiogram+OR+ab:magnetocardiogram+OR+ti:magnetocardiographic+OR+ab:magnetocardiographic)+OR+(ti:magnetoencephalography+OR+ab:magnetoencephalography+OR+ti:magnetoencephalographic+OR+ab:magnetoencephalographic+OR+ti:%22OPM-MEG%22+OR+ab:%22OPM-MEG%22))+OR+(ti:biomagnetic+OR+ab:biomagnetic+OR+ti:biomagnetism+OR+ab:biomagnetism))+AND+(ti:%22optically+pumped%22+OR+ab:%22optically+pumped%22+OR+ti:%22atomic+magnetometer%22+OR+ab:%22atomic+magnetometer%22+OR+ti:SQUID+OR+ab:SQUID+OR+ti:%22nitrogen+vacancy%22+OR+ab:%22nitrogen+vacancy%22+OR+ti:%22nitrogen-vacancy%22+OR+ab:%22nitrogen-vacancy%22)"
     max_results: 3
 
-  - name: "心音信号 PCG"
-    query: "cat:eess.SP+AND+(ti:phonocardiogram+OR+ti:heart+sound+OR+ti:PCG)"
+  - name: "生物磁屏蔽 / 磁场补偿 / 阵列校准"
+    query: "(((ti:magnetocardiography+OR+ab:magnetocardiography+OR+ti:magnetocardiogram+OR+ab:magnetocardiogram+OR+ti:magnetocardiographic+OR+ab:magnetocardiographic)+OR+(ti:magnetoencephalography+OR+ab:magnetoencephalography+OR+ti:magnetoencephalographic+OR+ab:magnetoencephalographic+OR+ti:%22OPM-MEG%22+OR+ab:%22OPM-MEG%22))+OR+(ti:biomagnetic+OR+ab:biomagnetic))+AND+(ti:shielding+OR+ab:shielding+OR+ti:%22field+compensation%22+OR+ab:%22field+compensation%22+OR+ti:%22field+nulling%22+OR+ab:%22field+nulling%22+OR+ti:calibration+OR+ab:calibration+OR+ti:crosstalk+OR+ab:crosstalk+OR+ti:%22cross-talk%22+OR+ab:%22cross-talk%22+OR+ti:%22sensor+array%22+OR+ab:%22sensor+array%22)"
     max_results: 3
 
-  - name: "心血管疾病 AI 预测"
-    query: "cat:cs.LG+AND+(ti:cardiovascular+OR+ti:cardiac)+AND+ti:deep+learning"
+  # ── 信号去噪 / 伪迹处理 / 多尺度方法 ──────────────────────────
+
+  - name: "心磁 / 脑磁去噪与干扰抑制"
+    query: "((ti:magnetocardiography+OR+ab:magnetocardiography+OR+ti:magnetocardiogram+OR+ab:magnetocardiogram+OR+ti:magnetocardiographic+OR+ab:magnetocardiographic)+OR+(ti:magnetoencephalography+OR+ab:magnetoencephalography+OR+ti:magnetoencephalographic+OR+ab:magnetoencephalographic+OR+ti:%22OPM-MEG%22+OR+ab:%22OPM-MEG%22))+AND+(ti:denoising+OR+ab:denoising+OR+ti:%22noise+suppression%22+OR+ab:%22noise+suppression%22+OR+ti:%22interference+suppression%22+OR+ab:%22interference+suppression%22+OR+ti:%22artifact+removal%22+OR+ab:%22artifact+removal%22+OR+ti:%22artefact+removal%22+OR+ab:%22artefact+removal%22+OR+ti:%22signal+space+separation%22+OR+ab:%22signal+space+separation%22+OR+ti:%22homogeneous+field+correction%22+OR+ab:%22homogeneous+field+correction%22)"
     max_results: 3
 
-  # ── 🧠 脑信号 + AI ────────────────────────────────────────
-
-  - name: "EEG 深度学习"
-    query: "cat:eess.SP+AND+(ti:EEG+OR+ti:electroencephalogram)+AND+ti:deep+learning"
+  - name: "ECG 去噪 / 基线漂移 / 工频干扰"
+    query: "(ti:ECG+OR+ab:ECG+OR+ti:EKG+OR+ab:EKG+OR+ti:electrocardiogram+OR+ab:electrocardiogram+OR+ti:electrocardiography+OR+ab:electrocardiography)+AND+(ti:denoising+OR+ab:denoising+OR+ti:%22noise+reduction%22+OR+ab:%22noise+reduction%22+OR+ti:%22baseline+wander%22+OR+ab:%22baseline+wander%22+OR+ti:%22baseline+drift%22+OR+ab:%22baseline+drift%22+OR+ti:%22power+line+interference%22+OR+ab:%22power+line+interference%22+OR+ti:%22powerline+interference%22+OR+ab:%22powerline+interference%22+OR+ti:%22artifact+removal%22+OR+ab:%22artifact+removal%22)"
     max_results: 4
 
-  - name: "EEG 机器学习"
-    query: "cat:eess.SP+AND+(ti:EEG+OR+ti:electroencephalogram)+AND+ti:machine+learning"
+  - name: "EEG 去噪 / 眼电肌电伪迹"
+    query: "(ti:EEG+OR+ab:EEG+OR+ti:electroencephalogram+OR+ab:electroencephalogram+OR+ti:electroencephalography+OR+ab:electroencephalography)+AND+(ti:denoising+OR+ab:denoising+OR+ti:%22artifact+removal%22+OR+ab:%22artifact+removal%22+OR+ti:%22artefact+removal%22+OR+ab:%22artefact+removal%22+OR+ti:%22artifact+correction%22+OR+ab:%22artifact+correction%22+OR+ti:%22ocular+artifact%22+OR+ab:%22ocular+artifact%22+OR+ti:%22muscle+artifact%22+OR+ab:%22muscle+artifact%22+OR+ti:%22independent+component+analysis%22+OR+ab:%22independent+component+analysis%22)"
     max_results: 4
 
-  - name: "脑机接口 BCI"
-    query: "cat:cs.LG+AND+(ti:brain-computer+interface+OR+ti:BCI+OR+ti:motor+imagery)"
+  - name: "心脑信号小波 / 多尺度 / 稀疏重建"
+    query: "(ti:ECG+OR+ab:ECG+OR+ti:EEG+OR+ab:EEG+OR+ti:electrocardiogram+OR+ab:electrocardiogram+OR+ti:electroencephalography+OR+ab:electroencephalography+OR+ti:magnetocardiography+OR+ab:magnetocardiography+OR+ti:magnetoencephalography+OR+ab:magnetoencephalography)+AND+(ti:wavelet+OR+ab:wavelet+OR+ti:multiscale+OR+ab:multiscale+OR+ti:%22multi-scale%22+OR+ab:%22multi-scale%22+OR+ti:%22variational+mode+decomposition%22+OR+ab:%22variational+mode+decomposition%22+OR+ti:%22sparse+reconstruction%22+OR+ab:%22sparse+reconstruction%22+OR+ti:%22compressed+sensing%22+OR+ab:%22compressed+sensing%22)"
     max_results: 3
 
-  - name: "fMRI / 神经影像"
-    query: "cat:eess.IV+AND+(ti:fMRI+OR+ti:neuroimaging+OR+ti:brain+MRI)"
+  # ── 正问题 / 逆问题 / 物理约束建模 ──────────────────────────
+
+  - name: "心脏电磁正问题 / 有限元建模"
+    query: "((ti:ECG+OR+ab:ECG+OR+ti:EKG+OR+ab:EKG+OR+ti:electrocardiogram+OR+ab:electrocardiogram+OR+ti:electrocardiography+OR+ab:electrocardiography)+OR+(ti:magnetocardiography+OR+ab:magnetocardiography+OR+ti:magnetocardiogram+OR+ab:magnetocardiogram+OR+ti:magnetocardiographic+OR+ab:magnetocardiographic))+AND+(ti:%22forward+model%22+OR+ab:%22forward+model%22+OR+ti:%22forward+modeling%22+OR+ab:%22forward+modeling%22+OR+ti:%22forward+modelling%22+OR+ab:%22forward+modelling%22+OR+ti:%22forward+problem%22+OR+ab:%22forward+problem%22+OR+ti:%22finite+element%22+OR+ab:%22finite+element%22+OR+ti:%22boundary+element%22+OR+ab:%22boundary+element%22+OR+ti:%22volume+conductor%22+OR+ab:%22volume+conductor%22)"
     max_results: 3
 
-  - name: "癫痫 AI 检测"
-    query: "cat:cs.LG+AND+(ti:epilepsy+OR+ti:seizure+detection)"
+  - name: "EEG / MEG 头模型与正问题"
+    query: "((ti:EEG+OR+ab:EEG+OR+ti:electroencephalogram+OR+ab:electroencephalogram+OR+ti:electroencephalography+OR+ab:electroencephalography)+OR+(ti:magnetoencephalography+OR+ab:magnetoencephalography+OR+ti:magnetoencephalographic+OR+ab:magnetoencephalographic+OR+ti:%22OPM-MEG%22+OR+ab:%22OPM-MEG%22))+AND+(ti:%22head+model%22+OR+ab:%22head+model%22+OR+ti:%22forward+model%22+OR+ab:%22forward+model%22+OR+ti:%22forward+modeling%22+OR+ab:%22forward+modeling%22+OR+ti:%22forward+modelling%22+OR+ab:%22forward+modelling%22+OR+ti:%22finite+element%22+OR+ab:%22finite+element%22+OR+ti:%22boundary+element%22+OR+ab:%22boundary+element%22+OR+ti:%22tissue+conductivity%22+OR+ab:%22tissue+conductivity%22)"
     max_results: 3
 
-  - name: "睡眠分期"
-    query: "cat:eess.SP+AND+(ti:sleep+staging+OR+ti:sleep+apnea+OR+ti:polysomnography)"
+  - name: "心磁逆问题 / 心电成像 ECGI"
+    query: "((ti:%22electrocardiographic+imaging%22+OR+ab:%22electrocardiographic+imaging%22+OR+ti:ECGI+OR+ab:ECGI)+OR+((ti:ECG+OR+ab:ECG+OR+ti:EKG+OR+ab:EKG+OR+ti:electrocardiogram+OR+ab:electrocardiogram+OR+ti:electrocardiography+OR+ab:electrocardiography)+OR+(ti:magnetocardiography+OR+ab:magnetocardiography+OR+ti:magnetocardiogram+OR+ab:magnetocardiogram+OR+ti:magnetocardiographic+OR+ab:magnetocardiographic))+AND+(ti:%22inverse+problem%22+OR+ab:%22inverse+problem%22+OR+ti:%22source+localization%22+OR+ab:%22source+localization%22+OR+ti:%22source+localisation%22+OR+ab:%22source+localisation%22+OR+ti:%22source+reconstruction%22+OR+ab:%22source+reconstruction%22))"
     max_results: 3
 
-  # ── ❤️ 纯临床心血管（无 AI/ML 约束）─────────────────────
-
-  - name: "冠心病 / 急性心肌梗死"
-    query: "(ti:coronary+artery+disease+OR+ti:myocardial+infarction)+AND+(ti:mechanism+OR+ti:treatment+OR+ti:prognosis)"
+  - name: "脑电 / 脑磁源定位与波束形成"
+    query: "((ti:EEG+OR+ab:EEG+OR+ti:electroencephalogram+OR+ab:electroencephalogram+OR+ti:electroencephalography+OR+ab:electroencephalography)+OR+(ti:magnetoencephalography+OR+ab:magnetoencephalography+OR+ti:magnetoencephalographic+OR+ab:magnetoencephalographic+OR+ti:%22OPM-MEG%22+OR+ab:%22OPM-MEG%22))+AND+(ti:%22source+localization%22+OR+ab:%22source+localization%22+OR+ti:%22source+localisation%22+OR+ab:%22source+localisation%22+OR+ti:%22source+reconstruction%22+OR+ab:%22source+reconstruction%22+OR+ti:%22source+imaging%22+OR+ab:%22source+imaging%22+OR+ti:beamforming+OR+ab:beamforming+OR+ti:beamformer+OR+ab:beamformer)"
     max_results: 3
 
-  - name: "心力衰竭"
-    query: "ti:heart+failure+AND+(ti:pathophysiology+OR+ti:therapy+OR+ti:biomarker)"
+  - name: "心脑信号物理约束学习 / 神经算子"
+    query: "(ti:ECG+OR+ab:ECG+OR+ti:EEG+OR+ab:EEG+OR+ti:electrocardiogram+OR+ab:electrocardiogram+OR+ti:electroencephalography+OR+ab:electroencephalography+OR+ti:magnetocardiography+OR+ab:magnetocardiography+OR+ti:magnetoencephalography+OR+ab:magnetoencephalography)+AND+(ti:%22physics-informed%22+OR+ab:%22physics-informed%22+OR+ti:%22physics+informed%22+OR+ab:%22physics+informed%22+OR+ti:%22physics-guided%22+OR+ab:%22physics-guided%22+OR+ti:%22physics+constrained%22+OR+ab:%22physics+constrained%22+OR+ti:%22neural+operator%22+OR+ab:%22neural+operator%22)"
     max_results: 3
 
-  - name: "高血压机制与治疗"
-    query: "(ti:hypertension+OR+ti:blood+pressure)+AND+(ti:mechanism+OR+ti:treatment)"
+  # ── 与心脑电磁信号直接相关的应用 ──────────────────────────
+
+  - name: "ECG AI 诊断 / 心律失常检测"
+    query: "(ti:ECG+OR+ab:ECG+OR+ti:EKG+OR+ab:EKG+OR+ti:electrocardiogram+OR+ab:electrocardiogram+OR+ti:electrocardiography+OR+ab:electrocardiography)+AND+(ti:classification+OR+ab:classification+OR+ti:%22arrhythmia+detection%22+OR+ab:%22arrhythmia+detection%22+OR+ti:%22atrial+fibrillation%22+OR+ab:%22atrial+fibrillation%22+OR+ti:%22myocardial+infarction%22+OR+ab:%22myocardial+infarction%22+OR+ti:%22cardiac+diagnosis%22+OR+ab:%22cardiac+diagnosis%22)+AND+(ti:%22deep+learning%22+OR+ab:%22deep+learning%22+OR+ti:%22machine+learning%22+OR+ab:%22machine+learning%22+OR+ti:%22neural+network%22+OR+ab:%22neural+network%22+OR+ti:transformer+OR+ab:transformer+OR+ti:%22foundation+model%22+OR+ab:%22foundation+model%22)"
     max_results: 3
 
-  - name: "心脏电生理 / 离子通道"
-    query: "cat:q-bio.NC+AND+(ti:cardiac+electrophysiology+OR+ti:ion+channel+OR+ti:action+potential)"
+  - name: "ECG 波形定位 / 导联重建"
+    query: "(ti:ECG+OR+ab:ECG+OR+ti:EKG+OR+ab:EKG+OR+ti:electrocardiogram+OR+ab:electrocardiogram+OR+ti:electrocardiography+OR+ab:electrocardiography)+AND+(ti:delineation+OR+ab:delineation+OR+ti:%22QRS+detection%22+OR+ab:%22QRS+detection%22+OR+ti:%22R+peak%22+OR+ab:%22R+peak%22+OR+ti:%22R-peak%22+OR+ab:%22R-peak%22+OR+ti:fiducial+OR+ab:fiducial+OR+ti:%22lead+reconstruction%22+OR+ab:%22lead+reconstruction%22+OR+ti:%22lead+synthesis%22+OR+ab:%22lead+synthesis%22+OR+ti:%22lead+reduction%22+OR+ab:%22lead+reduction%22)"
     max_results: 3
 
-  - name: "动脉粥样硬化 / 斑块"
-    query: "(ti:atherosclerosis+OR+ti:plaque)+AND+(ti:mechanism+OR+ti:inflammation+OR+ti:imaging)"
+  - name: "EEG / MEG 解码与脑机接口"
+    query: "((ti:EEG+OR+ab:EEG+OR+ti:electroencephalogram+OR+ab:electroencephalogram+OR+ti:electroencephalography+OR+ab:electroencephalography)+OR+(ti:magnetoencephalography+OR+ab:magnetoencephalography+OR+ti:magnetoencephalographic+OR+ab:magnetoencephalographic+OR+ti:%22OPM-MEG%22+OR+ab:%22OPM-MEG%22))+AND+(ti:%22brain-computer+interface%22+OR+ab:%22brain-computer+interface%22+OR+ti:%22brain+computer+interface%22+OR+ab:%22brain+computer+interface%22+OR+ti:%22neural+decoding%22+OR+ab:%22neural+decoding%22+OR+ti:%22motor+imagery%22+OR+ab:%22motor+imagery%22+OR+ti:SSVEP+OR+ab:SSVEP+OR+ti:P300+OR+ab:P300)"
     max_results: 3
 
-  # ── 🧠 纯临床脑疾病（无 AI/ML 约束）─────────────────────
-
-  - name: "阿尔茨海默病"
-    query: "(ti:Alzheimer+OR+ti:dementia)+AND+(ti:biomarker+OR+ti:pathology+OR+ti:treatment)"
+  - name: "EEG 癫痫检测 / 预测"
+    query: "(ti:EEG+OR+ab:EEG+OR+ti:electroencephalogram+OR+ab:electroencephalogram+OR+ti:electroencephalography+OR+ab:electroencephalography)+AND+(ti:%22seizure+detection%22+OR+ab:%22seizure+detection%22+OR+ti:%22seizure+prediction%22+OR+ab:%22seizure+prediction%22+OR+ti:%22seizure+forecasting%22+OR+ab:%22seizure+forecasting%22+OR+ti:epileptiform+OR+ab:epileptiform+OR+ti:%22epileptic+spike%22+OR+ab:%22epileptic+spike%22)"
     max_results: 3
 
-  - name: "帕金森病"
-    query: "ti:Parkinson+AND+(ti:mechanism+OR+ti:therapy+OR+ti:dopamine)"
+  - name: "EEG 睡眠分期"
+    query: "(ti:EEG+OR+ab:EEG+OR+ti:electroencephalogram+OR+ab:electroencephalogram+OR+ti:electroencephalography+OR+ab:electroencephalography)+AND+(ti:%22sleep+staging%22+OR+ab:%22sleep+staging%22+OR+ti:%22sleep+stage+classification%22+OR+ab:%22sleep+stage+classification%22+OR+ti:%22sleep+scoring%22+OR+ab:%22sleep+scoring%22)"
     max_results: 3
 
-  - name: "脑卒中 / 缺血性损伤"
-    query: "(ti:stroke+OR+ti:cerebral+ischemia+OR+ti:cerebral+infarction)+AND+(ti:mechanism+OR+ti:neuroprotection)"
+  # ── 自监督 / 基础模型 / 跨域与小样本学习 ──────────────────────────
+
+  - name: "心脑信号自监督 / 对比学习"
+    query: "(ti:ECG+OR+ab:ECG+OR+ti:EEG+OR+ab:EEG+OR+ti:electrocardiogram+OR+ab:electrocardiogram+OR+ti:electroencephalography+OR+ab:electroencephalography+OR+ti:magnetocardiography+OR+ab:magnetocardiography+OR+ti:magnetoencephalography+OR+ab:magnetoencephalography)+AND+(ti:%22self-supervised%22+OR+ab:%22self-supervised%22+OR+ti:%22self+supervised%22+OR+ab:%22self+supervised%22+OR+ti:%22contrastive+learning%22+OR+ab:%22contrastive+learning%22+OR+ti:%22masked+modeling%22+OR+ab:%22masked+modeling%22+OR+ti:%22masked+modelling%22+OR+ab:%22masked+modelling%22)"
     max_results: 3
 
-  - name: "癫痫基础与临床"
-    query: "(ti:epilepsy+OR+ti:seizure)+AND+(ti:mechanism+OR+ti:genetics+OR+ti:treatment)"
+  - name: "心脑信号基础模型 / 预训练"
+    query: "(ti:ECG+OR+ab:ECG+OR+ti:EEG+OR+ab:EEG+OR+ti:electrocardiogram+OR+ab:electrocardiogram+OR+ti:electroencephalography+OR+ab:electroencephalography+OR+ti:magnetocardiography+OR+ab:magnetocardiography+OR+ti:magnetoencephalography+OR+ab:magnetoencephalography)+AND+(ti:%22foundation+model%22+OR+ab:%22foundation+model%22+OR+ti:pretraining+OR+ab:pretraining+OR+ti:%22pre-training%22+OR+ab:%22pre-training%22+OR+ti:pretrained+OR+ab:pretrained+OR+ti:%22large-scale+pretraining%22+OR+ab:%22large-scale+pretraining%22)"
     max_results: 3
 
-  - name: "抑郁症 / 焦虑神经机制"
-    query: "cat:q-bio.NC+AND+(ti:depression+OR+ti:anxiety)+AND+(ti:neural+OR+ti:circuit+OR+ti:neurotransmitter)"
+  - name: "心脑信号跨被试 / 跨中心泛化"
+    query: "(ti:ECG+OR+ab:ECG+OR+ti:EEG+OR+ab:EEG+OR+ti:electrocardiogram+OR+ab:electrocardiogram+OR+ti:electroencephalography+OR+ab:electroencephalography+OR+ti:magnetocardiography+OR+ab:magnetocardiography+OR+ti:magnetoencephalography+OR+ab:magnetoencephalography)+AND+(ti:%22domain+adaptation%22+OR+ab:%22domain+adaptation%22+OR+ti:%22domain+generalization%22+OR+ab:%22domain+generalization%22+OR+ti:%22cross-subject%22+OR+ab:%22cross-subject%22+OR+ti:%22cross+subject%22+OR+ab:%22cross+subject%22+OR+ti:%22cross-patient%22+OR+ab:%22cross-patient%22+OR+ti:%22cross-dataset%22+OR+ab:%22cross-dataset%22+OR+ti:%22transfer+learning%22+OR+ab:%22transfer+learning%22)"
     max_results: 3
 
-  # ── 🔬 医学信号通用方法 ──────────────────────────────────
-
-  - name: "生物医学信号 Transformer"
-    query: "cat:cs.LG+AND+(ti:biosignal+OR+ti:physiological+signal)+AND+ti:transformer"
+  - name: "心脑信号少样本 / 半监督学习"
+    query: "(ti:ECG+OR+ab:ECG+OR+ti:EEG+OR+ab:EEG+OR+ti:electrocardiogram+OR+ab:electrocardiogram+OR+ti:electroencephalography+OR+ab:electroencephalography+OR+ti:magnetocardiography+OR+ab:magnetocardiography+OR+ti:magnetoencephalography+OR+ab:magnetoencephalography)+AND+(ti:%22few-shot%22+OR+ab:%22few-shot%22+OR+ti:%22few+shot%22+OR+ab:%22few+shot%22+OR+ti:%22zero-shot%22+OR+ab:%22zero-shot%22+OR+ti:%22semi-supervised%22+OR+ab:%22semi-supervised%22+OR+ti:%22label-efficient%22+OR+ab:%22label-efficient%22+OR+ti:%22active+learning%22+OR+ab:%22active+learning%22)"
     max_results: 3
 
-  - name: "可穿戴设备 PPG/IMU"
-    query: "cat:eess.SP+AND+(ti:wearable+OR+ti:PPG+OR+ti:IMU)+AND+ti:deep+learning"
+  # ── 限定心脑信号的 AI 架构与生成方法 ──────────────────────────
+
+  - name: "Mamba / 状态空间模型心脑信号应用"
+    query: "(ti:ECG+OR+ab:ECG+OR+ti:EEG+OR+ab:EEG+OR+ti:electrocardiogram+OR+ab:electrocardiogram+OR+ti:electroencephalography+OR+ab:electroencephalography+OR+ti:magnetocardiography+OR+ab:magnetocardiography+OR+ti:magnetoencephalography+OR+ab:magnetoencephalography)+AND+(ti:Mamba+OR+ab:Mamba+OR+ti:%22state+space+model%22+OR+ab:%22state+space+model%22+OR+ti:%22state-space+model%22+OR+ab:%22state-space+model%22+OR+ti:%22structured+state+space%22+OR+ab:%22structured+state+space%22)"
     max_results: 3
 
-  - name: "医学时序基础模型"
-    query: "cat:cs.LG+AND+(ti:foundation+model+OR+ti:pretrained)+AND+(ti:ECG+OR+ti:EEG+OR+ti:biosignal)"
+  - name: "KAN 心脑信号应用"
+    query: "(ti:ECG+OR+ab:ECG+OR+ti:EEG+OR+ab:EEG+OR+ti:electrocardiogram+OR+ab:electrocardiogram+OR+ti:electroencephalography+OR+ab:electroencephalography+OR+ti:magnetocardiography+OR+ab:magnetocardiography+OR+ti:magnetoencephalography+OR+ab:magnetoencephalography)+AND+(ti:KAN+OR+ab:KAN+OR+ti:%22Kolmogorov-Arnold%22+OR+ab:%22Kolmogorov-Arnold%22+OR+ti:%22Kolmogorov+Arnold%22+OR+ab:%22Kolmogorov+Arnold%22)"
     max_results: 3
 
-  # ── 🤖 深度学习通用方法 ──────────────────────────────────
-
-  - name: "自监督 / 对比学习"
-    query: "cat:cs.LG+AND+(ti:self-supervised+OR+ti:contrastive+learning)"
+  - name: "图神经网络 / 空间通道建模"
+    query: "(ti:ECG+OR+ab:ECG+OR+ti:EEG+OR+ab:EEG+OR+ti:electrocardiogram+OR+ab:electrocardiogram+OR+ti:electroencephalography+OR+ab:electroencephalography+OR+ti:magnetocardiography+OR+ab:magnetocardiography+OR+ti:magnetoencephalography+OR+ab:magnetoencephalography)+AND+(ti:%22graph+neural%22+OR+ab:%22graph+neural%22+OR+ti:%22graph+convolution%22+OR+ab:%22graph+convolution%22+OR+ti:%22graph+learning%22+OR+ab:%22graph+learning%22+OR+ti:%22graph+attention%22+OR+ab:%22graph+attention%22+OR+ti:Riemannian+OR+ab:Riemannian)"
     max_results: 3
 
-  - name: "医学小样本 / 迁移学习"
-    query: "cat:cs.LG+AND+(ti:few-shot+OR+ti:transfer+learning)+AND+ti:medical"
+  - name: "扩散模型 / 生成式信号重建"
+    query: "(ti:ECG+OR+ab:ECG+OR+ti:EEG+OR+ab:EEG+OR+ti:electrocardiogram+OR+ab:electrocardiogram+OR+ti:electroencephalography+OR+ab:electroencephalography+OR+ti:magnetocardiography+OR+ab:magnetocardiography+OR+ti:magnetoencephalography+OR+ab:magnetoencephalography)+AND+(ti:%22diffusion+model%22+OR+ab:%22diffusion+model%22+OR+ti:%22diffusion-based%22+OR+ab:%22diffusion-based%22+OR+ti:%22score-based%22+OR+ab:%22score-based%22+OR+ti:%22score+based%22+OR+ab:%22score+based%22+OR+ti:%22flow+matching%22+OR+ab:%22flow+matching%22)"
     max_results: 3
 
-# ── 🔥 热门新架构 ─────────────────────────────────────────
- 
-  - name: "KAN — Kolmogorov-Arnold Networks"
-    # 2024年爆火的KAN网络，用可学习激活函数替代MLP中固定权重
-    query: "cat:cs.LG+AND+(ti:KAN+OR+ti:Kolmogorov-Arnold)"
+  - name: "心脑信号多模态 / 文本对齐"
+    query: "(ti:ECG+OR+ab:ECG+OR+ti:EEG+OR+ab:EEG+OR+ti:electrocardiogram+OR+ab:electrocardiogram+OR+ti:electroencephalography+OR+ab:electroencephalography+OR+ti:magnetocardiography+OR+ab:magnetocardiography+OR+ti:magnetoencephalography+OR+ab:magnetoencephalography)+AND+(ti:multimodal+OR+ab:multimodal+OR+ti:%22multi-modal%22+OR+ab:%22multi-modal%22+OR+ti:%22cross-modal%22+OR+ab:%22cross-modal%22+OR+ti:%22signal-text%22+OR+ab:%22signal-text%22+OR+ti:%22signal+text%22+OR+ab:%22signal+text%22+OR+ti:%22language+model%22+OR+ab:%22language+model%22)"
     max_results: 3
- 
-  - name: "Mamba / 状态空间模型 SSM"
-    # 线性复杂度序列建模，时序生理信号的有力竞争者
-    query: "cat:cs.LG+AND+(ti:Mamba+OR+ti:state+space+model+OR+ti:SSM)+AND+(ti:sequence+OR+ti:time+series+OR+ti:signal)"
+
+  # ── 可解释性 / 隐私 / 实验可靠性 ──────────────────────────
+
+  - name: "心脑信号可解释性 / 不确定性"
+    query: "(ti:ECG+OR+ab:ECG+OR+ti:EEG+OR+ab:EEG+OR+ti:electrocardiogram+OR+ab:electrocardiogram+OR+ti:electroencephalography+OR+ab:electroencephalography+OR+ti:magnetocardiography+OR+ab:magnetocardiography+OR+ti:magnetoencephalography+OR+ab:magnetoencephalography)+AND+(ti:explainable+OR+ab:explainable+OR+ti:interpretable+OR+ab:interpretable+OR+ti:%22uncertainty+quantification%22+OR+ab:%22uncertainty+quantification%22+OR+ti:%22out-of-distribution%22+OR+ab:%22out-of-distribution%22+OR+ti:%22conformal+prediction%22+OR+ab:%22conformal+prediction%22)"
     max_results: 3
- 
-  - name: "Mamba 医学应用"
-    # Mamba 在医学图像/信号中的应用
-    query: "cat:cs.LG+AND+(ti:Mamba+OR+ti:SSM)+AND+(ti:medical+OR+ti:clinical+OR+ti:biomedical)"
+
+  - name: "心脑信号联邦学习 / 隐私保护"
+    query: "(ti:ECG+OR+ab:ECG+OR+ti:EEG+OR+ab:EEG+OR+ti:electrocardiogram+OR+ab:electrocardiogram+OR+ti:electroencephalography+OR+ab:electroencephalography+OR+ti:magnetocardiography+OR+ab:magnetocardiography+OR+ti:magnetoencephalography+OR+ab:magnetoencephalography)+AND+(ti:%22federated+learning%22+OR+ab:%22federated+learning%22+OR+ti:%22differential+privacy%22+OR+ab:%22differential+privacy%22+OR+ti:%22privacy-preserving%22+OR+ab:%22privacy-preserving%22)"
     max_results: 3
- 
-  - name: "YOLO 系列目标检测"
-    # YOLOv9/v10/v11 及医学影像目标检测
-    query: "cat:cs.CV+AND+(ti:YOLO+OR+ti:you+only+look+once)"
+
+  - name: "心脑信号数据集 / 基准 / 外部验证"
+    query: "(ti:ECG+OR+ab:ECG+OR+ti:EEG+OR+ab:EEG+OR+ti:electrocardiogram+OR+ab:electrocardiogram+OR+ti:electroencephalography+OR+ab:electroencephalography+OR+ti:magnetocardiography+OR+ab:magnetocardiography+OR+ti:magnetoencephalography+OR+ab:magnetoencephalography)+AND+((ti:dataset+OR+ti:database+OR+ti:benchmark+OR+ti:reproducibility)+OR+(ti:%22external+validation%22+OR+ab:%22external+validation%22+OR+ti:%22data+leakage%22+OR+ab:%22data+leakage%22+OR+ti:%22patient-level+split%22+OR+ab:%22patient-level+split%22+OR+ti:%22subject-level+split%22+OR+ab:%22subject-level+split%22))"
     max_results: 3
- 
-  - name: "YOLO 医学影像检测"
-    # YOLO 在病灶检测、细胞识别等医学场景的应用
-    query: "cat:cs.CV+AND+ti:YOLO+AND+(ti:medical+OR+ti:lesion+OR+ti:detection+OR+ti:segmentation)"
-    max_results: 3
- 
-  - name: "Vision Transformer / ViT 变体"
-    # ViT、Swin Transformer、DeiT 等视觉Transformer
-    query: "cat:cs.CV+AND+(ti:vision+transformer+OR+ti:ViT+OR+ti:Swin+Transformer)"
-    max_results: 3
- 
-  - name: "图神经网络 GNN 医学"
-    # GNN 在药物发现、疾病预测、脑网络分析中的应用
-    query: "cat:cs.LG+AND+(ti:graph+neural+network+OR+ti:GNN)+AND+(ti:medical+OR+ti:brain+OR+ti:drug)"
-    max_results: 3
- 
-  - name: "扩散模型 Diffusion 医学"
-    # Diffusion Model 在医学图像生成/增强/去噪中的应用
-    query: "cat:cs.CV+AND+ti:diffusion+AND+(ti:medical+OR+ti:MRI+OR+ti:CT+OR+ti:ultrasound)"
-    max_results: 3
- 
-  - name: "大语言模型 LLM 医学"
-    # LLM / ChatGPT / GPT-4 在医学问答、报告生成中的应用
-    query: "cat:cs.CL+AND+(ti:large+language+model+OR+ti:LLM+OR+ti:GPT)+AND+(ti:medical+OR+ti:clinical+OR+ti:health)"
-    max_results: 3
- 
-  - name: "多模态医学 AI"
-    # 融合文本、图像、信号的多模态医学模型
-    query: "cat:cs.LG+AND+ti:multimodal+AND+(ti:medical+OR+ti:clinical+OR+ti:ECG+OR+ti:EEG)"
-    max_results: 3
- 
-  - name: "可解释 AI / XAI 医学"
-    # 医学场景的可解释性，SHAP、Grad-CAM 等
-    query: "cat:cs.LG+AND+(ti:explainable+OR+ti:interpretable+OR+ti:XAI)+AND+(ti:medical+OR+ti:clinical)"
-    max_results: 3
- 
-  - name: "联邦学习 医学隐私"
-    # 多中心医疗数据隐私保护训练
-    query: "cat:cs.LG+AND+ti:federated+learning+AND+(ti:medical+OR+ti:health+OR+ti:clinical)"
-    max_results: 3
+
 # ═══════════════════════════════════════════════════════════
 # 四、播客
 # ═══════════════════════════════════════════════════════════
 
 podcasts:
 
-  # ── 医学 / 神经科学 ──────────────────────────────────────
+  # ── 神经科学与 AI 研究者访谈 ───────────────────────────
 
-  - name: "Brain Science with Ginger Campbell"   # 顶级神经科学播客，学术深度访谈
-    url: "https://brainsciencepodcast.com/bsp.xml"
-    transcribe: false
-
-  - name: "CardioNerds"                          # 心脏病学专业播客（ACC官方支持）
-    url: "https://feeds.buzzsprout.com/1252790.rss"
-    transcribe: false
-
-  - name: "Huberman Lab"                         # 斯坦福神经科学与脑健康
-    url: "https://feeds.megaphone.fm/hubermanlab"
-    transcribe: false
-
-  # ── AI / 深度学习 ─────────────────────────────────────────
-
-  - name: "TWIML AI Podcast"
-    url: "https://twimlai.com/feed"
-    transcribe: false
-
-  - name: "Machine Learning Street Talk"
-    url: "https://feeds.buzzsprout.com/1511458.rss"
-    transcribe: false
-
-  - name: "Practical AI"
-    url: "https://changelog.com/practicalai/feed"
+  - name: "Brain Inspired"          # 研究者访谈，补充 NeuroAI 方法背景
+    url: "https://braininspired.co/feed/podcast/brain-inspired/"
     transcribe: false
 
 
@@ -372,39 +265,26 @@ podcasts:
 hackernews:
   enabled: true
   keywords:
-    # 医学信号处理
-    - "ECG"
-    - "EEG"
-    - "brain"
-    - "cardiac"
-    - "biosignal"
-    - "wearable"
-    - "medical AI"
-    - "health AI"
-    - "BCI"
-    - "neuroscience"
-    # 临床疾病
-    - "Alzheimer"
-    - "Parkinson"
-    - "stroke"
-    - "heart failure"
-    - "epilepsy"
-    # 深度学习通用
-    - "deep learning"
-    - "transformer"
-    - "KAN"
-    - "mamba"
-    - "neural network"
-    - "machine learning"
-    - "foundation model"
-    # 热门新架构
-    - "KAN"
-    - "Mamba"
-    - "state space model"
-    - "YOLO"
-    - "diffusion model"
-    - "multimodal"
-    - "federated learning"
-    - "graph neural"
+    # 心脑电磁测量；避免 brain、medical AI 等宽泛词和 KAN 等短词
+    - "magnetocardiography"
+    - "magnetocardiogram"
+    - "magnetoencephalography"
+    - "electrocardiogram"
+    - "electrocardiography"
+    - "electroencephalography"
+    - "electroencephalogram"
+    - "OPM-MEG"
+    - "optically pumped magnetometer"
+    - "ECG denoising"
+    - "EEG denoising"
+    - "ECG foundation"
+    - "EEG foundation"
+    # 专门的数据、软件与评测资源
+    - "PhysioNet"
+    - "MNE-Python"
+    - "EEGLAB"
+    - "FieldTrip"
+    - "Braindecode"
+    - "NeuroKit"
   min_score: 70
   max_items: 4
