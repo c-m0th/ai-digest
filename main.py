@@ -27,7 +27,7 @@ sys.path.insert(0, str(ROOT))
 from src.fetchers.youtube import fetch_channel
 from src.fetchers.rss import fetch_blog, fetch_podcast, fetch_arxiv
 from src.fetchers.hackernews import fetch_hn
-from src.processors.summarizer import batch_summarize
+from src.processors.summarizer import batch_summarize, _get_available_providers
 from src.processors.email_sender import send_email, render_email
 from src.utils.database import init_db, mark_processed, record_run
 from src.utils.logger import get_logger
@@ -110,8 +110,8 @@ def run(dry_run: bool = False, preview: bool = False):
     logger.info("=" * 50)
 
     # 检查 API Key
-    if not os.environ.get("ANTHROPIC_API_KEY"):
-        logger.error("❌ 未设置 ANTHROPIC_API_KEY 环境变量！")
+    if not _get_available_providers():
+        logger.error("未配置有效的非空 API Key，请至少配置一个摘要服务。")
         sys.exit(1)
 
     init_db()
@@ -142,14 +142,14 @@ def run(dry_run: bool = False, preview: bool = False):
     elif dry_run:
         logger.info("🔍 [Dry Run] 跳过发送邮件")
 
-    # 4. 标记已处理
-    for item in items:
-        mark_processed(
-            url=item["url"],
-            title=item["title"],
-            source_name=item["source_name"],
-            platform=item["platform"],
-        )
+    # 仅在成功生成 AI 摘要并成功投递后标记；失败、预览和 dry-run 保留重试机会。
+    if email_sent:
+        for item in items:
+            if item.get("summary_success", False):
+                mark_processed(
+                    url=item["url"], title=item["title"],
+                    source_name=item["source_name"], platform=item["platform"],
+                )
 
     # 5. 记录运行
     record_run(len(items), email_sent)
