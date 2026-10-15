@@ -85,7 +85,12 @@ jobs:
 
       # ✅ 正式运行
       - name: 运行摘要助理
+        timeout-minutes: 22
         env:
+          PYTHONUNBUFFERED: "1"
+          AI_CALL_TIMEOUT_SECONDS: "90"
+          AI_BATCH_TIMEOUT_SECONDS: "600"
+          GEMINI_MODEL: ${{ vars.GEMINI_MODEL || 'gemini-3.8-flash' }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
@@ -95,3 +100,12 @@ jobs:
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
           EMAIL_TO: ${{ secrets.EMAIL_TO }}
         run: python main.py --run-now
+
+      - name: 保存抓取内容和摘要快照
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: digest-snapshot-${{ github.run_id }}-${{ github.run_attempt }}
+          path: data/digest_snapshot.json
+          if-no-files-found: ignore
+          retention-days: 7
