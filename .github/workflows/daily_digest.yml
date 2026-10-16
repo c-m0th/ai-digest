@@ -5,6 +5,10 @@ on:
     - cron: '0 0 * * *'
   workflow_dispatch:
 
+concurrency:
+  group: ai-digest-delivery
+  cancel-in-progress: false
+
 jobs:
   digest:
     runs-on: ubuntu-latest
@@ -77,10 +81,10 @@ jobs:
           fi
       
       - name: 恢复去重数据库缓存
-        uses: actions/cache@v4
+        uses: actions/cache/restore@v4
         with:
           path: data/digest.db
-          key: digest-db-${{ github.run_number }}
+          key: digest-db-${{ github.run_id }}-${{ github.run_attempt }}
           restore-keys: digest-db-
 
       # ✅ 正式运行
@@ -100,6 +104,13 @@ jobs:
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
           EMAIL_TO: ${{ secrets.EMAIL_TO }}
         run: python main.py --run-now
+
+      - name: 保存去重数据库缓存
+        if: ${{ always() && hashFiles('data/digest.db') != '' }}
+        uses: actions/cache/save@v4
+        with:
+          path: data/digest.db
+          key: digest-db-${{ github.run_id }}-${{ github.run_attempt }}
 
       - name: 保存抓取内容和摘要快照
         if: always()
